@@ -788,7 +788,7 @@ namespace CoachBot.Domain.Services
             var knockoutStage = tournament.TournamentStages.Last();
             var earliestMatchDate = _coachBotContext.TournamentGroupMatches.AsQueryable().Where(t => t.TournamentPhase.TournamentStage.TournamentId == tournamentId).Max(m => m.Match.KickOff).Value;
             var numberOfGroups = _coachBotContext.TournamentGroups.Count(g => g.TournamentStageId == groupStage.Id);
-            var numberOfTeams = _coachBotContext.TournamentGroups.AsQueryable().Where(g => g.TournamentStageId == groupStage.Id).Max(g => g.TournamentGroupTeams.Count());
+            var numberOfTeams = _coachBotContext.TournamentGroups.AsQueryable().Where(g => g.TournamentStageId == groupStage.Id).ToList().Max(g => g.TournamentGroupTeams.Count());
 
             var knockoutGroupSize = GetNumberOfQualifyingKnockoutTeams(numberOfTeams, numberOfGroups);
             var teams = new List<Team>();
@@ -1163,7 +1163,7 @@ namespace CoachBot.Domain.Services
                 var matchDaySlots = _coachBotContext.TournamentMatchDays.AsQueryable().Where(t => t.TournamentId == tournament.Id).OrderBy(t => t.MatchDay).OrderBy(t => t.MatchTime).ToList();
                 var currentSlotIndex = 0;
                 var currentPhaseNumber = 1;
-                foreach (var phase in stage.TournamentPhases)
+                foreach (var phase in stage.TournamentPhases.OrderBy(tp => tp.Id))
                 {
                     if (currentPhaseNumber > 1)
                     {
