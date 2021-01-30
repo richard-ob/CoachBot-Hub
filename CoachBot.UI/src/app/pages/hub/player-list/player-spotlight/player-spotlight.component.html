@@ -11,11 +11,16 @@
             <div *ngIf="spotlightPlayer" class="d-flex">
                 <div class="statistic-spotlight-stat-container">
                     <div class="statistic-spotlight-stat-value">
-                        <ng-container *ngIf="statistic === playerSpotlightStatistic.PassCompletion; else nonPercentage">
+                        <ng-container *ngIf="usePercent; else nonPercentage">
                             {{spotlightPlayer[modelProperty] | percent }}
                         </ng-container>
                         <ng-template #nonPercentage>
-                            {{spotlightPlayer[modelProperty] | number:'1.1-1'}}
+                            <ng-container *ngIf="!useDecimal; else decimal">
+                                {{spotlightPlayer[modelProperty]}}
+                            </ng-container>
+                            <ng-template #decimal>
+                                {{spotlightPlayer[modelProperty] | number:'1.1-1'}}
+                            </ng-template>
                         </ng-template>
                     </div>
                     <div class="statistic-spotlight-stat-measure">

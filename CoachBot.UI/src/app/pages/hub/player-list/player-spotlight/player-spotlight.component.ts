@@ -23,6 +23,8 @@ export class PlayerSpotlightComponent implements OnInit {
     modelProperty: string;
     measureName: string;
     positionFilter: string;
+    usePercent: boolean = false;
+    useDecimal: boolean = true;
     heading: string;
     ordering: string;
     iconClass: string;
@@ -38,15 +40,20 @@ export class PlayerSpotlightComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (this.tournamentId) {
+            this.filters.tournamentId = this.tournamentId;
+            this.useDecimal = false;
+        } else {
+            this.filters.timePeriod = TimePeriod.Week;
+        }
         this.setProperties(this.statistic);
         this.filters.regionId = this.userPreferencesService.getUserPreference(UserPreferenceType.Region);
         this.filters.includeSubstituteAppearances = false;
         this.filters.minimumSecondsPlayed = 60 * 80; // Only include matches where player played at least roughly 80 mins
-        this.filters.minimumAppearances = 10;
-        if (this.tournamentId) {
-            this.filters.tournamentId = this.tournamentId;
+        if (this.filters.tournamentId) {
+            this.filters.minimumAppearances = 5;
         } else {
-            this.filters.timePeriod = TimePeriod.Week;
+            this.filters.minimumAppearances = 10;
         }
         this.regionService.getRegions().subscribe(regions => {
             const region = regions.find(r => r.regionId === this.filters.regionId);
@@ -63,37 +70,68 @@ export class PlayerSpotlightComponent implements OnInit {
     setProperties(playerSpotlightStatistic: PlayerSpotlightStatistic) {
         switch (playerSpotlightStatistic) {
             case PlayerSpotlightStatistic.Goals:
-                this.modelProperty = 'goalsAverage';
-                this.apiModelProperty = 'GoalsAverage';
-                this.heading = $localize`:@@spotlight.goalScorersOfWeek:Goal Scorer of the Week`;
-                this.measureName = $localize`:@@globals.averageGoals:Average Goals`;
+                if (this.filters.tournamentId) {
+                    this.modelProperty = 'goals';
+                    this.apiModelProperty = 'Goals';
+                    this.heading = $localize`:@@spotlight.tournament.goldenBoot:Golden Boot`;
+                    this.measureName = $localize`:@@globals.goals:Goals`;
+                } else {
+                    this.modelProperty = 'goalsAverage';
+                    this.apiModelProperty = 'GoalsAverage';
+                    this.heading = $localize`:@@spotlight.goalScorersOfWeek:Goal Scorer of the Week`;
+                    this.measureName = $localize`:@@globals.averageGoals:Average Goals`;
+                }
                 this.ordering = 'DESC';
                 this.filters.positionName = null;
                 this.iconClass = 'icon-soccer-ball';
                 break;
             case PlayerSpotlightStatistic.Assists:
-                this.modelProperty = 'assistsAverage';
-                this.apiModelProperty = 'AssistsAverage';
-                this.heading = $localize`:@@spotlight.assisterOfTheWeek:Assister of the Week`;
-                this.measureName = $localize`:@@globals.averageAssists:Average Assists`;
+                if (this.filters.tournamentId) {
+                    this.modelProperty = 'assists';
+                    this.apiModelProperty = 'Assists';
+                    this.heading = $localize`:@@spotlight.tournament.topAssister:Top Assister`;
+                    this.measureName = $localize`:@@globals.assists:Assists`;
+                } else {
+                    this.modelProperty = 'assistsAverage';
+                    this.apiModelProperty = 'AssistsAverage';
+                    this.heading = $localize`:@@spotlight.assisterOfTheWeek:Assister of the Week`;
+                    this.measureName = $localize`:@@globals.averageAssists:Average Assists`;                    
+                }
                 this.ordering = 'DESC';
                 this.filters.positionName = null;
                 this.iconClass = 'icon-soccer-shoe';
                 break;
             case PlayerSpotlightStatistic.GoalsConceded:
-                this.modelProperty = 'goalsConcededAverage';
-                this.apiModelProperty = 'GoalsConcededAverage';
-                this.heading = $localize`:@@spotlight.keeperOfTheWeek:Keeper of the Week`;
-                this.measureName = $localize`:@@globals.averageGoalsConceded:Average Goals Conceded`;
-                this.ordering = 'ASC';
+                if (this.filters.tournamentId) {
+                    this.modelProperty = 'keeperSavePercentage';
+                    this.apiModelProperty = 'KeeperSavePercentage';
+                    this.heading = $localize`:@@spotlight.tournament.bestKeeper:Best Keeper`;
+                    this.measureName = $localize`:@@globals.saveRate:Save Rate`;
+                    this.ordering = 'DESC';
+                    this.usePercent = true;
+                } else {
+                    this.modelProperty = 'goalsConcededAverage';
+                    this.apiModelProperty = 'GoalsConcededAverage';
+                    this.heading = $localize`:@@spotlight.keeperOfTheWeek:Keeper of the Week`;
+                    this.measureName = $localize`:@@globals.averageGoalsConceded:Average Goals Conceded`;
+                    this.ordering = 'ASC';
+                }
                 this.filters.positionName = 'GK';
                 this.iconClass = 'icon-keepers-glove';
                 break;
             case PlayerSpotlightStatistic.PassCompletion:
-                this.modelProperty = 'passCompletionPercentageAverage';
-                this.apiModelProperty = 'PassCompletionPercentageAverage';
-                this.heading = $localize`:@@spotlight.passerOfTheWeek:Passer of the Week`;
-                this.measureName = $localize`:@@globals.passCompletion:Pass Completion`;
+                if (this.filters.tournamentId) {
+                    this.modelProperty = 'passesCompleted';
+                    this.apiModelProperty = 'PassesCompleted';
+                    this.heading = $localize`:@@spotlight.tournament.topPasser:Top Passer`;
+                    this.measureName = $localize`:@@globals.passesCompleted:Passes Completed`;
+                } else {
+                    this.modelProperty = 'passCompletionPercentageAverage';
+                    this.apiModelProperty = 'PassCompletionPercentageAverage';
+                    this.heading = $localize`:@@spotlight.passerOfTheWeek:Passer of the Week`;
+                    this.measureName = $localize`:@@globals.passCompletion:Pass Completion`;
+                    this.usePercent = true;
+                }
                 this.ordering = 'DESC';
                 this.filters.positionName = null;
                 this.iconClass = 'icon-soccer-shots';
