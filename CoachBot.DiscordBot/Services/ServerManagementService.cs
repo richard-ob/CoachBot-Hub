@@ -629,7 +629,7 @@ namespace CoachBot.Services
                 return null;
             }
 
-            return kits.Select(k => Int32.Parse(k.Split(':').FirstOrDefault())).FirstOrDefault();
+            return kits.Select(k => Int32.Parse(k.Split(':').FirstOrDefault())).LastOrDefault();
         }
     }
 }
