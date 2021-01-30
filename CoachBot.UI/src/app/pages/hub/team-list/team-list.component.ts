@@ -43,6 +43,9 @@ export class TeamListComponent implements OnInit {
 
     ngOnInit() {
         this.filters.tournamentId = this.tournamentId;
+        if (this.filters.tournamentId) {
+            this.filters.includeInactive = true;
+        }
         this.regionId = this.userPreferenceService.getUserPreference(UserPreferenceType.Region);
         this.filters.regionId = this.regionId;
         this.filters.includeInactive = false;
