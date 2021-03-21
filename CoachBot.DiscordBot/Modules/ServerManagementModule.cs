@@ -155,7 +155,7 @@ namespace CoachBot.Modules
             {
                 await ReplyAsync("", embed: DiscordEmbedHelper.GenerateEmbed("Invalid server ID or map name provided. Use `!servers` to see the full server list or `!maps <server id>` for the full map list.", ServiceResponseStatus.Failure));
             }
-        }
+        }*/
 
         [Command("!changekits")]
         [Alias("!changekit", "!kit")]
@@ -169,6 +169,6 @@ namespace CoachBot.Modules
             {
                 await ReplyAsync("", embed: DiscordEmbedHelper.GenerateEmbed("Invalid server ID or kit ID provided. Use `!servers` to see the full server list or `!kits <server id>` for the full kit list.", ServiceResponseStatus.Failure));
             }
-        }*/
+        }
     }
 }
