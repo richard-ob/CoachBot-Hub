@@ -463,20 +463,6 @@ namespace CoachBot.Domain.Services
             return PositionGroupHelper.MapPositionToPositionGroup(position.Name);
         }
 
-        private static float GetRandomRating()
-        {
-            Random r = new Random();
-            string beforePoint = r.Next(4, 9).ToString();
-            string afterPoint = r.Next(0, 9).ToString();
-            string combined = beforePoint + "." + afterPoint;
-            return float.Parse(combined);
-        }
-
-        private static PositionGroup GetRandomPositionGroup()
-        {
-            return (PositionGroup)new Random().Next(0, 4);
-        }
-
         public void GenerateFantasyPhaseSnapshots(int tournamentPhaseId)
         {
             _queue.QueueBackgroundWorkItem(async token =>
@@ -542,7 +528,7 @@ namespace CoachBot.Domain.Services
             currentScore += playerMatchStatistics.Assists * 3; // Assists
 
             // Clean sheets
-            if ((playerMatchStatistics.SecondsPlayed * 60) > 75)
+            if ((playerMatchStatistics.SecondsPlayed / 60) > 75)
             {
                 if ((mainPosition == PositionGroup.Goalkeeper || mainPosition == PositionGroup.Defence) && playerMatchStatistics.GoalsConceded == 0) currentScore += 6;
                 if (mainPosition == PositionGroup.Midfield && playerMatchStatistics.GoalsConceded == 0) currentScore += 3;
@@ -562,7 +548,7 @@ namespace CoachBot.Domain.Services
             currentScore -= playerMatchStatistics.OwnGoals * 2;
             
             // Pass Completion
-            if ((playerMatchStatistics.SecondsPlayed * 60) > 75)
+            if ((playerMatchStatistics.SecondsPlayed / 60) > 75)
             {
                 var passCompletion = playerMatchStatistics.Passes > 0 ? (playerMatchStatistics.PassesCompleted / playerMatchStatistics.Passes) * 100 : 0;
                 if (passCompletion >= 70 && passCompletion < 80) currentScore += 2;
