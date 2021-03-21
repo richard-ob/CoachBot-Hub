@@ -16,7 +16,7 @@ export class TeamEditorSquadAddPlayerComponent {
     @Output() wizardClosed = new EventEmitter<void>();
     @Output() playerAdded = new EventEmitter<void>();
     @Input() teamId: number;
-    @Input() teamPlayers: Player[];
+    @Input() teamPlayers: PlayerTeam[];
     teamType: TeamType;
     player: Player;
     role: TeamRole;
@@ -33,8 +33,9 @@ export class TeamEditorSquadAddPlayerComponent {
         this.playerAlreadyAdded = false;
         this.teamService.getTeam(this.teamId).subscribe(team => {
             this.playerService.getPlayerProfile(this.player.id).subscribe(playerProfile => {
-                if (this.teamPlayers.some(tp => tp.id === this.player.id)) {
+                if (this.teamPlayers.some(tp => tp.playerId === this.player.id)) {
                     this.playerAlreadyAdded = true;
+                    this.isSaving = false;
                     return;
                 }
                 if (!playerProfile.clubTeam ||
