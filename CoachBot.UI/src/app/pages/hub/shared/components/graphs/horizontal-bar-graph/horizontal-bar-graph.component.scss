@@ -37,3 +37,15 @@
 .game-result__subtitle {
     text-align: center;
 }
+
+.progress__bar--border-left {
+    border-left: 1px #e2e2e2 solid;
+    border-top: 1px #e2e2e2 solid;
+    border-bottom: 1px #e2e2e2 solid;
+}
+
+.progress__bar--border-right {
+    border-right: 1px #e2e2e2 solid;
+    border-top: 1px #e2e2e2 solid;
+    border-bottom: 1px #e2e2e2 solid;    
+}

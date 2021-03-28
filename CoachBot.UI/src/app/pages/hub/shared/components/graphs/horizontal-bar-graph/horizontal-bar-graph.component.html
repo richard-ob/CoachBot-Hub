@@ -20,7 +20,7 @@
                 <div class="progress__bar" role="progressbar" [style.background-color]="homeColour"
                     [style.width]="(homeValue | percentageSharePipe:[awayValue]) + '%'" aria-valuemin="0"
                     aria-valuemax="100"></div>
-                <div class="progress__bar progress__bar--success" [style.background-color]="awayColour"
+                <div class="progress__bar progress__bar--success" [style.background-color]="normalisedAwayColour"
                     [style.width]="(awayValue | percentageSharePipe:[homeValue]) + '%'" role="progressbar"
                     aria-valuemin="0" aria-valuemax="100"></div>
             </div>

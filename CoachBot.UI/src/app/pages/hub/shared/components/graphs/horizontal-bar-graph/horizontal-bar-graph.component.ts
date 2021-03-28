@@ -25,14 +25,17 @@ export class HorizontalBarGraphComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.homeColourFont = this.getFontColour(this.homeColour);
-    this.awayColourFont = this.getFontColour(this.awayColour);
+    this.awayColourFont = this.getFontColour(this.normalisedAwayColour);
   }
 
   getFontColour(color): string {
     return ColourUtils.isDark(color) ? '#000000' : '#ffffff';
   }
 
+  get normalisedAwayColour() {
+    return ColourUtils.getNormalisedSecondColour(this.homeColour, this.awayColour);
+  }
 
 }
