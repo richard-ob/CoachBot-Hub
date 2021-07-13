@@ -172,6 +172,49 @@ namespace CoachBot.Domain.Services
             _coachBotContext.SaveChanges();
         }
 
+        public TournamentGroupMatch GetTournamentGroupMatchForMatch(int matchId)
+        {
+            return _coachBotContext.TournamentGroupMatches.SingleOrDefault(t => t.MatchId == matchId);
+        }
+
+        public int GetTournamentIdForGroupMatch(int id)
+        {
+            return _coachBotContext.TournamentGroupMatches.AsQueryable().Where(m => m.Id == id).Select(m => m.TournamentGroup.TournamentStage.TournamentId).First();
+        }
+
+        public void UpdateTournamentGroupMatch(TournamentGroupMatch tournamentGroupMatch)
+        {
+            var existingMatch = _coachBotContext.TournamentGroupMatches.Single(m => m.Id == tournamentGroupMatch.Id);
+
+            existingMatch.TeamHomePlaceholder = tournamentGroupMatch.TeamHomePlaceholder;
+            existingMatch.TeamAwayPlaceholder = tournamentGroupMatch.TeamAwayPlaceholder;
+
+            _coachBotContext.SaveChanges();
+        }
+
+        public void DeleteTournamentGroupMatch(int tournamentGroupMatchId)
+        {
+            var existingTournamentMatch = _coachBotContext.TournamentGroupMatches.Single(m => m.Id == tournamentGroupMatchId);
+
+            if (_coachBotContext.TeamMatchStatistics.Any(t => t.MatchId == existingTournamentMatch.MatchId))
+            {
+                throw new Exception("Cannot delete a tournament match that still has statistics attached");
+            }
+
+            _coachBotContext.TournamentGroupMatches.Remove(existingTournamentMatch);
+
+            var existingMatch = _coachBotContext.Matches.Single(m => m.Id == existingTournamentMatch.MatchId);
+            _coachBotContext.Matches.Remove(existingMatch);
+
+            _coachBotContext.SaveChanges();
+        }
+
+        public void CreateTournamentGroupMatch(TournamentGroupMatch tournamentGroupMatch)
+        {
+            _coachBotContext.TournamentGroupMatches.Add(tournamentGroupMatch);
+            _coachBotContext.SaveChanges();
+        }
+
         public void CreateTournamentSeries(TournamentSeries tournament)
         {
             _coachBotContext.TournamentSeries.Add(tournament);
@@ -641,7 +684,10 @@ namespace CoachBot.Domain.Services
                     ManageRoundRobinAndKnockoutProgress(tournamentId, matchId);
                     break;
 
-                // TODO: Handle standard Round Robin tournaments. If the season is complete, then mark the winner.
+                case TournamentType.DoubleRoundRobin:
+                case TournamentType.RoundRobin:
+                    ManageRoundRobinProgress(tournamentId, matchId);
+                    break;
                 
                 default:
                     break;
@@ -672,10 +718,15 @@ namespace CoachBot.Domain.Services
             if (tournamentMatches != null & tournamentMatches.Any())
             {
                 _coachBotContext.TournamentGroupMatches.RemoveRange(tournamentMatches);
+                _coachBotContext.SaveChanges();
                 var matches = _coachBotContext.Matches.AsQueryable().Where(t => t.TournamentId == tournamentId);
                 if (matches.Count() < 200)
                 {
-                    _coachBotContext.Matches.RemoveRange(matches);
+                    foreach(var match in matches)
+                    {
+                        _coachBotContext.Matches.Remove(match);
+                        _coachBotContext.SaveChanges();
+                    }
                 }
             }
             _coachBotContext.TournamentPhases.RemoveRange(_coachBotContext.TournamentPhases.AsQueryable().Where(t => t.TournamentStage.TournamentId == tournamentId));
@@ -845,7 +896,7 @@ namespace CoachBot.Domain.Services
             var knockoutStage = tournament.TournamentStages.Last();
             var earliestMatchDate = _coachBotContext.TournamentGroupMatches.AsQueryable().Where(t => t.TournamentPhase.TournamentStage.TournamentId == tournamentId).Max(m => m.Match.KickOff).Value;
             var numberOfGroups = _coachBotContext.TournamentGroups.Count(g => g.TournamentStageId == groupStage.Id);
-            var numberOfTeams = _coachBotContext.TournamentGroups.AsQueryable().Where(g => g.TournamentStageId == groupStage.Id).Max(g => g.TournamentGroupTeams.Count());
+            var numberOfTeams = _coachBotContext.TournamentGroups.AsSplitQuery().AsQueryable().Where(g => g.TournamentStageId == groupStage.Id).Max(g => g.TournamentGroupTeams.Count());
 
             var knockoutGroupSize = GetNumberOfQualifyingKnockoutTeams(numberOfTeams, numberOfGroups);
             var teams = new List<Team>();
@@ -861,9 +912,9 @@ namespace CoachBot.Domain.Services
             switch (groupSize)
             {
                 case 3:
-                    return 2 * groups;
+                    return 3 * groups;
                 case 4:
-                    return 2 * groups;
+                    return 4 * groups;
                 case 5:
                     return 3 * groups;
                 case 6:
@@ -871,7 +922,10 @@ namespace CoachBot.Domain.Services
                 case 7:
                     return 4 * groups;
                 case 8:
-                    return 5 * groups;
+                    return 6 * groups;
+                case 12:
+                    return 8 * groups;
+
             }
             throw new ArgumentException("Group size not supported");
         }
@@ -1020,7 +1074,18 @@ namespace CoachBot.Domain.Services
         #endregion Knockout
 
         #region Round Robin
-
+        private void ManageRoundRobinProgress(int tournamentId, int matchId)
+        {
+           if (!_coachBotContext.Matches.Any(m => m.TournamentId == tournamentId && m.MatchStatisticsId == null))
+           {
+                var groupId = _coachBotContext.TournamentGroups.Single(t => t.TournamentStage.TournamentId == tournamentId).Id;
+                var standings = GetTournamentGroupStandings(groupId);
+                var winnerId = standings.First().TeamId;
+                var tournament = _coachBotContext.Tournaments.Single(t => t.Id == tournamentId);
+                tournament.WinningTeamId = winnerId;
+                _coachBotContext.SaveChanges();
+           }
+        }
         private void GenerateRoundRobinTournament(int tournamentId)
         {
             var tournament = _coachBotContext.Tournaments.Include(t => t.TournamentSeries).First(t => t.Id == tournamentId);
@@ -1165,6 +1230,7 @@ namespace CoachBot.Domain.Services
                 var currentPhaseNumber = 1;
                 foreach (var phase in stage.TournamentPhases.OrderBy(tp => tp.Id))
                 {
+                    int matchesCreated = 0;
                     if (currentPhaseNumber > 1)
                     {
                         int daysUntilNextMonday = (((int)DayOfWeek.Monday - (int)earliestMatchDate.DayOfWeek + 7) % 7) + 1;
@@ -1172,6 +1238,10 @@ namespace CoachBot.Domain.Services
                     }
                     foreach (var groupTeam in group.TournamentGroupTeams)
                     {
+                        if (_coachBotContext.TournamentGroupMatches.Any(t => t.TournamentPhaseId == phase.Id && (t.Match.TeamHomeId == groupTeam.TeamId || t.Match.TeamAwayId == groupTeam.TeamId)))
+                        {
+                            continue;
+                        }
                         DateTime scheduledKickOff;
                         if (currentSlotIndex == matchDaySlots.Count() - 1)
                         {
@@ -1184,17 +1254,19 @@ namespace CoachBot.Domain.Services
                         }
                         earliestMatchDate = scheduledKickOff;
 
-                        var awayTeam = group.TournamentGroupTeams.Where(t =>
+                        var awayTeam = group.TournamentGroupTeams.FirstOrDefault(t =>
                             t.TeamId != groupTeam.TeamId
                             // Team doesn't already have a match in this phase
                             && !_coachBotContext.TournamentGroupMatches.Any(m =>
                                 (t.TeamId == m.Match.TeamAwayId || t.TeamId == m.Match.TeamHomeId) && m.TournamentPhaseId == phase.Id
                             )
                             // Match-up hasn't already happened in a previous phase
-                            && !group.TournamentGroupMatches.Any(m => (m.Match.TeamHomeId == t.TeamId && m.Match.TeamAwayId == groupTeam.TeamId) || (m.Match.TeamAwayId == t.TeamId && m.Match.TeamHomeId == groupTeam.TeamId)
+                            && !_coachBotContext.TournamentGroupMatches.Any(m => 
+                                ((m.Match.TeamHomeId == t.TeamId && m.Match.TeamAwayId == groupTeam.TeamId) || (m.Match.TeamAwayId == t.TeamId && m.Match.TeamHomeId == groupTeam.TeamId))
+                                && m.TournamentPhase.TournamentStage.TournamentId == tournament.Id
                             )
-                        ).FirstOrDefault();
-                        if (awayTeam != null && !_coachBotContext.TournamentGroupMatches.Any(t => t.TournamentPhaseId == phase.Id && (t.Match.TeamHomeId == groupTeam.TeamId || t.Match.TeamAwayId == groupTeam.TeamId)))
+                        );
+                        if (awayTeam != null)
                         {
                             var match = new TournamentGroupMatch()
                             {
@@ -1212,7 +1284,26 @@ namespace CoachBot.Domain.Services
                             };
                             _coachBotContext.TournamentGroupMatches.Add(match);
                             _coachBotContext.SaveChanges();
+                            matchesCreated++;
                         }
+                    }
+                    var missingMatchesCount = (group.TournamentGroupTeams.Count / 2) - matchesCreated;
+                    for (int i = 0; i < missingMatchesCount; i++)
+                    {
+                        var match = new TournamentGroupMatch()
+                        {
+                            TournamentGroupId = group.Id,
+                            TournamentPhaseId = phase.Id,
+                            Match = new Match()
+                            {
+                                MatchType = MatchType.Competition,
+                                KickOff = GetMatchDaySlotDate(earliestMatchDate, matchDaySlots.Last()),
+                                Format = tournament.Format,
+                                TournamentId = tournament.Id
+                            }
+                        };
+                        _coachBotContext.TournamentGroupMatches.Add(match);
+                        _coachBotContext.SaveChanges();
                     }
                     currentPhaseNumber++;
                 }
@@ -1346,7 +1437,7 @@ namespace CoachBot.Domain.Services
         {
             var phases = new List<TournamentPhase>();
             // INFO: Numbers of phases is number of teams minus 1, so this for logic is intentional
-            for (int i = 1; i <= numberOfteams; i++)
+            for (int i = 1; i < numberOfteams; i++)
             {
                 var phase = new TournamentPhase()
                 {

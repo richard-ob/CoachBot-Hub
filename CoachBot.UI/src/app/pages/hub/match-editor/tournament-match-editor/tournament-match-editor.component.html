@@ -1,0 +1,21 @@
+<div class="card">
+    <div class="card__header">
+        <h4 i18n="@@globals.matchStatistics">Tournament Match</h4>
+    </div>
+    <div class="card__content">
+        <ng-container *ngIf="!isLoading; else spinner">
+            <div class="form-group">
+                <label i18n="@@globals.tournamentTeamHomePlaceholder">Team Home Placeholder</label>
+                <input class="form-control" type="text" name="teamHomePlaceholder" [(ngModel)]="tournamentGroupMatch.teamHomePlaceholder">
+            </div>
+            <div class="form-group">
+                <label i18n="@@globals.tournamentTeamAwayPlaceholder">Team Away Placeholder</label>
+                <input class="form-control" type="text" name="teamAwayPlaceholder" [(ngModel)]="tournamentGroupMatch.teamAwayPlaceholder">
+            </div>
+            <button class="btn btn-primary" (click)="updateMatch()" type="button" i18n="@@globals.save">Save</button>
+        </ng-container>
+        <ng-template #spinner>
+            <app-spinner></app-spinner>
+        </ng-template>
+    </div>
+</div>

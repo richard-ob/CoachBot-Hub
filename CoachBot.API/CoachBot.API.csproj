@@ -46,6 +46,7 @@
     <Compile Include="Controllers\TeamActivityController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\TeamStatisticsController.cs" />
+    <Compile Include="Controllers\TournamentGroupMatchController.cs" />
     <Compile Include="Controllers\TournamentSeriesController.cs" />
     <Compile Include="Controllers\TournamentController.cs" />
     <Compile Include="Controllers\TournamentStaffController.cs" />

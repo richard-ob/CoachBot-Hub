@@ -7,6 +7,6 @@ export interface TournamentGroupMatch {
     tournamentGroupId: number;
     tournamentPhaseId: number;
     teamHomePlaceholder: string;
-    homeAwayPlaceholder: string;
+    teamAwayPlaceholder: string;
     tournamentGroup: TournamentGroup;
 }

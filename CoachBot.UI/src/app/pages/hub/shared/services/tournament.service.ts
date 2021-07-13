@@ -13,6 +13,7 @@ import { Tournament } from '../model/tournament.model';
 import { TournamentStaff } from '../model/tournament-staff.model';
 import { Organisation } from '../model/organisation.model';
 import { TournamentGroupStanding } from '../model/tournament-group-standing.model';
+import { TournamentGroupMatch } from '../model/tournament-group-match.model';
 
 @Injectable({
     providedIn: 'root'
@@ -157,4 +158,21 @@ export class TournamentService {
     getTournamentGroupStandings(tournamentGroupId: number): Observable<TournamentGroupStanding[]> {
         return this.http.get<TournamentGroupStanding[]>(`${environment.apiUrl}/api/tournament-groups/${tournamentGroupId}/standings`);
     }
+
+    getTournamentGroupMatchForMatch(matchId: number): Observable<TournamentGroupMatch> {
+        return this.http.get<TournamentGroupMatch>(`${environment.apiUrl}/api/tournament-group-matches/${matchId}`);
+    }
+
+    updateTournamentGroupMatch(tournamentGroupMatch: TournamentGroupMatch): Observable<void> {
+        return this.http.put<void>(`${environment.apiUrl}/api/tournament-group-matches`, tournamentGroupMatch);
+    }
+
+    deleteTournamentGroupMatch(tournamentGroupMatchId: number): Observable<void> {
+        return this.http.delete<void>(`${environment.apiUrl}/api/tournament-group-matches/${tournamentGroupMatchId}`);
+    }
+
+    createTournamentGroupMatch(tournamentGroupMatch: TournamentGroupMatch, tournamentId: number): Observable<void> {
+        return this.http.post<void>(`${environment.apiUrl}/api/tournament-group-matches/${tournamentId}`, tournamentGroupMatch);
+    }
+
 }

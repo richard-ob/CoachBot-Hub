@@ -66,6 +66,7 @@ import { ServerCreatorComponent } from './server-manager/server-creator/server-c
 import { TeamHeadToHeadModule } from './team-head-to-head/team-head-to-head.module';
 import { GraphModule } from './shared/components/graphs/graph.module';
 import { TournamentMatchListComponent } from './tournaments/tournament-match-list/tournament-match-list.component';
+import { TournamentMatchEditorComponent } from './match-editor/tournament-match-editor/tournament-match-editor.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { TournamentMatchListComponent } from './tournaments/tournament-match-lis
     OrganisationEditorComponent,
     MatchEditorComponent,
     MatchDataUploaderComponent,
+    TournamentMatchEditorComponent,
     MatchOverviewLineupComponent,
     MatchOverviewPlayerStatisticsComponent,
     MatchOverviewLineupPositionComponent,

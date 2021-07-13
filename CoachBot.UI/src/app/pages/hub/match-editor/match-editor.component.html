@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group">
                     <label i18n="@@globals.awayTeam">Away Team</label>
-                    <select [(ngModel)]="match.teamAwayId" name="teamHome" class="form-control">
+                    <select [(ngModel)]="match.teamAwayId" name="teamAway" class="form-control">
                         <option *ngFor="let team of teams" [ngValue]="team.id">{{team.name}} ({{team.teamCode}})
                         </option>
                     </select>
@@ -96,4 +96,7 @@ sv_webserver_matchdata_accesstoken "{{matchToken}}"
             </ng-template>
         </div>
     </div>
+
+    <!--<app-tournament-match-editor *ngIf="match && match.tournamentId" [matchId]="match.id"></app-tournament-match-editor>-->
+
 </div>
