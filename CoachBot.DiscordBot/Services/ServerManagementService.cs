@@ -441,6 +441,12 @@ namespace CoachBot.Services
 
             if (!string.IsNullOrEmpty(server.RconPassword) && ServerAddressHelper.IsValidAddress(server.Address))
             {
+                if (IsServerInUse(server.Id))
+                {
+                    await _discordNotificationService.SendAuditChannelMessage($"Couldn't set up server for tournament match as server in use: {match.Id} ({match.TeamHome.Name} vs {match.TeamAway.Name}) [KO: {((DateTime)match.KickOff).ToString("g")}]");
+                    return;
+                }
+
                 if (match.Map != null)
                 {
                     try
@@ -521,6 +527,12 @@ namespace CoachBot.Services
 
             if (!string.IsNullOrEmpty(server.RconPassword) && ServerAddressHelper.IsValidAddress(server.Address))
             {
+                if (IsServerInUse(serverId))
+                {
+                    await _discordNotificationService.SendAuditChannelMessage($"Couldn't set up server for tournament match as server in use");
+                    return;
+                }
+
                 try
                 {
                     INetworkSocket socket = new RconSocket();
