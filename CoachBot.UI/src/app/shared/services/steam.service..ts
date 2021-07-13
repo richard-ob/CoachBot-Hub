@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SteamUserProfileResponse } from '../../pages/hub/shared/model/steam-user-profile.model';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,8 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/user-profiles?steamIdsCsv=${steamIds.join(',')}`;
 
         if (this.isSafari) {
-            url = 'https://cors-anywhere.herokuapp.com/' + url;
+            url = 'https://api.allorigins.win/get?url=' + url;
+            return this.http.get<SteamUserProfileResponse>(url).pipe(map(response => (response as any).contents));
         }
 
         return this.http.get<SteamUserProfileResponse>(url);
@@ -25,7 +27,8 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/playing-time?steamId=${steamId}`;
 
         if (this.isSafari) {
-            url = 'https://cors-anywhere.herokuapp.com/' + url;
+            url = 'https://api.allorigins.win/get?url=' + url;
+            return this.http.get<any>(url).pipe(map(response => (response as any).contents));
         }
 
         return this.http.get<any>(url);
@@ -35,7 +38,8 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/nicknames?steamId=${steamId}`;
 
         if (this.isSafari) {
-            url = 'https://cors-anywhere.herokuapp.com/' + url;
+            url = 'https://api.allorigins.win/get?url=' + url;
+            return this.http.get<string[]>(url).pipe(map(response => (response as any).contents));
         }
 
         return this.http.get<string[]>(url);
@@ -45,7 +49,8 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/news`;
 
         if (this.isSafari) {
-            url = 'https://cors-anywhere.herokuapp.com/' + url;
+            url = 'https://api.allorigins.win/get?url=' + url
+            return this.http.get<any>(url).pipe(map(response => (response as any).contents));
         }
 
         return this.http.get<any>(url);
