@@ -30,7 +30,7 @@ export class TournamentStandingsRoundRobinKnockoutComponent implements OnInit {
             case 7:
                 return 4;
             case 8:
-                return 5;
+                return 6;
         }
         return -1;
     }
