@@ -4,14 +4,16 @@ using CoachBot.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CoachBot.Domain.Migrations
 {
     [DbContext(typeof(CoachBotContext))]
-    partial class CoachBotContextModelSnapshot : ModelSnapshot
+    [Migration("20210713221954_Migration6_AddCaseMgmt")]
+    partial class Migration6_AddCaseMgmt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

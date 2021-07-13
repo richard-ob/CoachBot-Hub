@@ -66,6 +66,10 @@ namespace CoachBot.Database
         public DbSet<FantasyPlayerRank> FantasyPlayerRanks { get; set; }
         public DbSet<ScorePrediction> ScorePredictions { get; set; }
         public DbSet<AssetImage> AssetImages { get; set; }
+        public DbSet<Case> Cases { get; set; }
+        public DbSet<CaseNote> CaseNotes { get; set; }
+        public DbSet<CaseNoteImage> CaseNoteImages { get; set; }
+        public DbSet<Ban> Bans { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -145,6 +149,7 @@ namespace CoachBot.Database
             modelBuilder.Entity<PlayerLineupPosition>().HasKey(ptp => new { ptp.PlayerId, ptp.PositionId, ptp.LineupId });
             modelBuilder.Entity<PlayerLineupSubstitute>().HasKey(ptp => new { ptp.PlayerId, ptp.LineupId });
             modelBuilder.Entity<ChannelPosition>().HasKey(cp => new { cp.ChannelId, cp.PositionId });
+            modelBuilder.Entity<CaseNoteImage>().HasKey(cni => new { cni.CaseNoteId, cni.AssetImageId });
 
             // Manual relationships
             modelBuilder.Entity<Player>().HasMany(p => p.Teams).WithOne("Player");
@@ -165,6 +170,7 @@ namespace CoachBot.Database
             modelBuilder.Entity<PlayerLineupPosition>().HasIndex(ptp => new { ptp.PositionId, ptp.LineupId }).IsUnique(true);
             modelBuilder.Entity<TournamentStaff>().HasIndex(tes => new { tes.PlayerId, tes.TournamentId }).IsUnique(true);
             modelBuilder.Entity<FantasyTeam>().HasIndex(ft => new { ft.PlayerId, ft.TournamentId }).IsUnique(true);
+            modelBuilder.Entity<CaseNoteImage>().HasIndex(cni => new { cni.CaseNoteId, cni.AssetImageId }).IsUnique(true);
 
             // Performance indexes
             modelBuilder.Entity<MatchStatistics>().HasIndex(ms => new { ms.HomeGoals });
@@ -208,6 +214,9 @@ namespace CoachBot.Database
             modelBuilder.Entity<FantasyTeamSelection>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<ScorePrediction>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<AssetImage>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Case>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<CaseNote>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Ban>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
 
             // Conversions
             modelBuilder.Entity<Search>().Property(p => p.DiscordSearchMessages).HasConversion(v => JsonConvert.SerializeObject(v), v => JsonConvert.DeserializeObject<Dictionary<ulong, ulong>>(v));
@@ -225,7 +234,7 @@ namespace CoachBot.Database
             modelBuilder.Entity<PlayerPerformanceSnapshot>().ToTable("PlayerPerformanceSnapshots", t => t.ExcludeFromMigrations());
 
             // Seed data - disabled after initial run, as the country culture approach is not supported by *nix
-            //modelBuilder.Entity<Country>().HasData(CountrySeedData.GetCountries());
+            // modelBuilder.Entity<Country>().HasData(CountrySeedData.GetCountries());
         }
 
         public bool IsPlayerSigned(ulong discordUserId) => throw new NotSupportedException();
