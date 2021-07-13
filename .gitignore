@@ -268,8 +268,6 @@ config-dev.json
 config-test.json
 config-prod.json
 
-Migrations/
-
 # json-autotranslate
 gcp-config.json
 .json-autotranslate-cache
