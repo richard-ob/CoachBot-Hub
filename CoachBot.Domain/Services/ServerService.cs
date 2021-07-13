@@ -64,6 +64,12 @@ namespace CoachBot.Domain.Services
                 throw new Exception("The server address provided is not a valid IPv4 IP or hostname, and port");
             }
 
+            var existingDeactivatedServer = _coachBotContext.Servers.AsQueryable().FirstOrDefault(s => s.Address == server.Address && s.DeactivatedDate != null);
+            if (existingDeactivatedServer != null)
+            {
+                existingDeactivatedServer.Address = existingDeactivatedServer.Address + "_REUSED_" + DateTime.Now.Ticks.ToString();
+            }
+
             _coachBotContext.Servers.Add(server);
             _coachBotContext.SaveChanges();
         }
