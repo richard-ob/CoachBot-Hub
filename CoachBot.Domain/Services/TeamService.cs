@@ -101,7 +101,7 @@ namespace CoachBot.Domain.Services
 
             if ((existingTeam.BadgeImageId != team.BadgeImageId || existingTeam.RegionId != team.RegionId || existingTeam.TeamCode != team.TeamCode) && team.BadgeImageId.HasValue)
             {
-                var emoteName = $"{team.TeamCode}_{team.RegionId}";
+                var emoteName = $"{team.TeamCode.Replace(" ", "").Replace(".", "")}_{team.RegionId}";
                 var badgeImage = _dbContext.AssetImages.Single(i => i.Id == team.BadgeImageId);
                 if (existingTeam.BadgeImageId != team.BadgeImageId && existingTeam.BadgeEmote != null)
                 {

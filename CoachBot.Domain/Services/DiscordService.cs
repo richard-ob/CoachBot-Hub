@@ -31,11 +31,28 @@ namespace CoachBot.Domain.Services
 
         public string CreateEmote(string emoteName, string image)
         {
-            var guild = _discordSocketClient.GetGuild(_config.DiscordConfig.OwnerGuildId) as SocketGuild;
-            var bytes = Convert.FromBase64String(image.Split(',')[1]); // Remove base64 header info
-            var emote = guild.CreateEmoteAsync(emoteName, new Image(new MemoryStream(bytes))).Result;
+            GuildEmote createdEmote = null;
+            // Discord has small limits (50 default, 100 with boosted server) of emote capacity, so we'll just have lots of empty guilds to store them
+            foreach (var guildId in _config.DiscordConfig.EmoteGuilds)
+            {
+                try
+                {
+                    var guild = _discordSocketClient.GetGuild(guildId);
+                    var bytes = Convert.FromBase64String(image.Split(',')[1]); // Remove base64 header info
+                    var emote = guild.CreateEmoteAsync(emoteName, new Image(new MemoryStream(bytes))).Result;
+                    createdEmote = emote;
+                }
+                catch
+                {
 
-            return $"<:{emote.Name}:{emote.Id}>";
+                }
+                if (createdEmote != null)
+                {
+                    break;
+                }
+            }
+
+            return $"<:{createdEmote.Name}:{createdEmote.Id}>";
         }
 
         public void DeleteEmote(string emoteString)
@@ -43,9 +60,19 @@ namespace CoachBot.Domain.Services
             try
             {
                 var emoteId = ulong.Parse(emoteString.Split(':')[2].Replace(">", ""));
-                var guild = _discordSocketClient.GetGuild(_config.DiscordConfig.OwnerGuildId) as SocketGuild;
-                var emote = guild.GetEmoteAsync(emoteId).Result;
-                guild.DeleteEmoteAsync(emote).Wait();
+                foreach(var guildId in _config.DiscordConfig.EmoteGuilds)
+                {
+                    try
+                    {
+                        var guild = _discordSocketClient.GetGuild(guildId);
+                        var emote = guild.GetEmoteAsync(emoteId).Result;
+                        guild.DeleteEmoteAsync(emote).Wait();
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
             catch
             {

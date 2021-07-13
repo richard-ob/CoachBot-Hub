@@ -1,4 +1,6 @@
-﻿namespace CoachBot.Shared.Model
+﻿using System.Collections.Generic;
+
+namespace CoachBot.Shared.Model
 {
     public class Config
     {
@@ -56,6 +58,8 @@
         public ulong AuditChannelId { get; set; } = 642879369366339635;
 
         public ulong ResultStreamChannelId { get; set; } = 741956156985180170;
+
+        public List<ulong> EmoteGuilds { get; set; } = new List<ulong>();
     }
 
     public class BotConfig
