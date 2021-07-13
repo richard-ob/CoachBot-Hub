@@ -166,6 +166,10 @@ namespace CoachBot.Database
             modelBuilder.Entity<TournamentStaff>().HasIndex(tes => new { tes.PlayerId, tes.TournamentId }).IsUnique(true);
             modelBuilder.Entity<FantasyTeam>().HasIndex(ft => new { ft.PlayerId, ft.TournamentId }).IsUnique(true);
 
+            // Performance indexes
+            modelBuilder.Entity<MatchStatistics>().HasIndex(ms => new { ms.HomeGoals });
+            modelBuilder.Entity<MatchStatistics>().HasIndex(ms => new { ms.AwayGoals });
+
             // Defaults
             modelBuilder.Entity<Channel>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<Team>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
@@ -213,6 +217,12 @@ namespace CoachBot.Database
 
             // User Defined Functions
             modelBuilder.HasDbFunction(typeof(CoachBotContext).GetMethod(nameof(IsPlayerSigned), new[] { typeof(ulong) })).HasName("IsPlayerSigned");
+
+            // Exclude classes from migration
+            modelBuilder.Entity<FantasyPlayerRank>().ToTable("FantasyPlayerRanks", t => t.ExcludeFromMigrations());
+            modelBuilder.Entity<FantasyTeamRank>().ToTable("FantasyTeamRanks", t => t.ExcludeFromMigrations());
+            modelBuilder.Entity<TeamPerformanceSnapshot>().ToTable("TeamPerformanceSnapshots", t => t.ExcludeFromMigrations());
+            modelBuilder.Entity<PlayerPerformanceSnapshot>().ToTable("PlayerPerformanceSnapshots", t => t.ExcludeFromMigrations());
 
             // Seed data - disabled after initial run, as the country culture approach is not supported by *nix
             //modelBuilder.Entity<Country>().HasData(CountrySeedData.GetCountries());
