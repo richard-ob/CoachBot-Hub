@@ -236,13 +236,10 @@ namespace CoachBot.Domain.Services
                 _tournamentService.ManageTournamentProgress((int)match.TournamentId, match.Id);
             }
 
-            _discordNotificationService.SendAuditChannelMessage($"New match statistics uploaded for {match.TeamHome.Name} vs {match.TeamAway.Name}").Wait();
-
             if (_config.BotConfig.EnableBotHubIntegration)
             {
                 var resultEmbed = GetResultEmbed(match);
 
-                _discordNotificationService.SendChannelMessage(_config.DiscordConfig.AuditChannelId, GetResultDetailedEmbed(match)).Wait();
                 _discordNotificationService.SendChannelMessage(_config.DiscordConfig.ResultStreamChannelId, GetResultDetailedEmbed(match)).Wait();
 
                 if (match.Matchup != null)
@@ -669,6 +666,7 @@ namespace CoachBot.Domain.Services
         {
             return _coachBotContext.PlayerPositionMatchStatistics
                 .AsNoTracking()
+                .ExcludeBannedPlayers()
                 .Where(p => filters.MatchId == null || p.MatchId == filters.MatchId)
                 .Where(p => filters.IncludeSubstituteAppearances || !p.Substitute)
                 .Where(p => filters.PlayerId == null || p.PlayerId == filters.PlayerId)
@@ -699,6 +697,7 @@ namespace CoachBot.Domain.Services
         {
             return _coachBotContext.PlayerMatchStatistics
                 .AsNoTracking()
+                .ExcludeBannedPlayers()
                 .Where(p => filters.MatchId == null || p.MatchId == filters.MatchId)
                 .Where(p => filters.IncludeSubstituteAppearances || !p.Substitute)
                 .Where(p => filters.PlayerId == null || p.PlayerId == filters.PlayerId)
@@ -758,6 +757,7 @@ namespace CoachBot.Domain.Services
             return _coachBotContext
                  .PlayerPositionMatchStatistics
                  .AsNoTracking()
+                 .ExcludeBannedPlayers()
                  .Where(p => filters.IncludeSubstituteAppearances || !p.Substitute)
                  .Where(p => filters.MatchId == null || p.MatchId == filters.MatchId)
                  .Where(p => filters.PlayerId == null || p.PlayerId == filters.PlayerId)
@@ -882,6 +882,7 @@ namespace CoachBot.Domain.Services
             return _coachBotContext
                  .PlayerMatchStatistics
                  .AsNoTracking()
+                 .ExcludeBannedPlayers()
                  .Where(p => filters.IncludeSubstituteAppearances || !p.Substitute)
                  .Where(p => filters.MatchId == null || p.MatchId == filters.MatchId)
                  .Where(p => filters.PlayerId == null || p.PlayerId == filters.PlayerId)

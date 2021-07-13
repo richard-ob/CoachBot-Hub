@@ -1,4 +1,5 @@
 ﻿using CoachBot.Database;
+using CoachBot.Domain.Extensions;
 using CoachBot.Domain.Model;
 using CoachBot.Model;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace CoachBot.Domain.Services
 
         public PlayerProfile GeneratePlayerProfile(int playerId)
         {
-            var player = _coachBotContext.Players.Include(p => p.Country).Single(p => p.Id == playerId);
+            var player = _coachBotContext.Players.ExcludeBannedPlayers().Include(p => p.Country).Single(p => p.Id == playerId);
 
             var clubPlayerTeam = GetTeam(playerId, TeamType.Club);
             var nationalPlayerTeam = GetTeam(playerId, TeamType.National);
