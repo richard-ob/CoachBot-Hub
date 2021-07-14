@@ -19,6 +19,10 @@ namespace CoachBot.Domain.Model
 
         public List<CaseNoteImage> CaseNoteImages { get; set; }
 
+        public int CaseId { get; set; }
+
+        public Case Case { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedDate { get; set; }
 
