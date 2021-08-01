@@ -135,15 +135,26 @@ namespace CoachBot.Domain.Services
             };
 
             _dbContext.CaseNotes.Add(newCaseNote);
-            _dbContext.SaveChanges();
 
             var playerId = CallContext.GetData(CallContextDataType.PlayerId);
             var player = _dbContext.Players.Find(playerId);
+            var existingCase = _dbContext.Cases.Find(caseId);
+
             if (player.HubRole == PlayerHubRole.Player)
             {
-                var caseTitle = _dbContext.Cases.Find(caseId).CaseTitle;
-                _discordNotificationService.SendModChannelMessage($"`{caseTitle}` by {player.Name} - http://www.iosoccer.com/support/{caseId} {Environment.NewLine} ```{HtmlHelper.StripHTML(caseNoteText).Truncate(2000)}```", "Ticket Updated").Wait();
+                existingCase.CaseStatus = CaseStatus.PendingManagerResponse;
+                _discordNotificationService.SendModChannelMessage($"`{existingCase.CaseTitle}` by {player.Name} - http://www.iosoccer.com/support/{caseId} {Environment.NewLine} ```{HtmlHelper.StripHTML(caseNoteText).Truncate(2000)}```", "Ticket Updated").Wait();
             }
+            else
+            {
+                if (existingCase.CaseStatus == CaseStatus.Unassigned && !existingCase.CaseManagerId.HasValue)
+                {
+                    existingCase.CaseManagerId = player.Id;
+                }
+                existingCase.CaseStatus = CaseStatus.PendingPlayerResponse;
+            }
+
+            _dbContext.SaveChanges();
         }
 
         public List<CaseNote> GetNotesForCase(int caseId)
