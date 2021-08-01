@@ -1,1 +1,12 @@
-<app-ban-editor-form [ban]="newBan" (banSaved)="emitBanCreated()"></app-ban-editor-form>
+<div class="pb-4 container">
+    <div class="card">
+        <div class="card__header">
+            <h4>
+                Add Ban
+            </h4>
+        </div>            
+        <div class="card__content">
+            <app-ban-editor-form [ban]="newBan" (banSaved)="emitBanCreated()"></app-ban-editor-form>
+        </div>  
+    </div>
+</div>

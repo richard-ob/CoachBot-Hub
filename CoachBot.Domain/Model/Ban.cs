@@ -1,5 +1,6 @@
 ﻿using CoachBot.Database;
 using CoachBot.Model;
+using Humanizer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,8 +33,7 @@ namespace CoachBot.Domain.Model
 
         public Player BannedPlayer { get; set; }
 
-        [JsonIgnore]
-        public string BanDuration => "";
+        public string BanDuration => EndDate.HasValue ? new TimeSpan(EndDate.Value.Ticks - StartDate.Ticks).Humanize() : "Permanent";
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedDate { get; set; }

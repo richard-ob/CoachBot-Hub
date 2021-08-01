@@ -73,7 +73,7 @@ namespace CoachBot.Domain.Services
             // TODO: Send ban DM
             var playerId = CallContext.GetData(CallContextDataType.PlayerId);
             var playerCreated = _dbContext.Players.Find(playerId);
-            await _discordNotificationService.SendModChannelMessage($"{player.Name} banned by {playerCreated.Name} - http://www.iosoccer.com/ban/{banId}", "Ban Created");
+            await _discordNotificationService.SendModChannelMessage($"{player.Name} banned by {playerCreated.Name} for {ban.BanDuration} - http://www.iosoccer.com/ban/{banId}", "Ban Created");
         }
 
         public async Task UpdateBan(Ban ban)

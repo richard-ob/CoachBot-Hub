@@ -5,6 +5,7 @@ export interface Ban {
     banType?: BanType;
     banReason?: BanReason;
     banInfo?: string;
+    banDuration?: string;
     startDate?: Date;
     endDate?: Date;
     sourceBansId?: number;

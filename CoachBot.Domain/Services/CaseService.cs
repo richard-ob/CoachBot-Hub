@@ -74,6 +74,11 @@ namespace CoachBot.Domain.Services
                 existingCase.ClosedDate = null;
             }
 
+            if (caseToUpdate.CaseStatus == CaseStatus.Unassigned && caseToUpdate.CaseManagerId.HasValue)
+            {
+                existingCase.CaseStatus = CaseStatus.PendingManagerResponse;
+            }
+
             _dbContext.SaveChanges();
 
         }
@@ -134,7 +139,7 @@ namespace CoachBot.Domain.Services
 
             var playerId = CallContext.GetData(CallContextDataType.PlayerId);
             var player = _dbContext.Players.Find(playerId);
-            if (player.HubRole == PlayerHubRole.Owner)
+            if (player.HubRole == PlayerHubRole.Player)
             {
                 var caseTitle = _dbContext.Cases.Find(caseId).CaseTitle;
                 _discordNotificationService.SendModChannelMessage($"`{caseTitle}` by {player.Name} - http://www.iosoccer.com/support/{caseId} {Environment.NewLine} ```{HtmlHelper.StripHTML(caseNoteText).Truncate(2000)}```", "Ticket Updated").Wait();

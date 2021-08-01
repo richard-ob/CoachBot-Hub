@@ -10,7 +10,7 @@
         <div *ngIf="ban.id" class="form-group">
             <label for="bannedPlayer" i18n="@@bans.bannedPlayer">Banned Player</label>
             <div class="text-muted">
-                <a [routerLink]="['/player-profile/', ban.bannedPlayerId]">{{ban.bannedPlayer.name}}</a>
+                <a [routerLink]="['/player-profile/', ban.bannedPlayerId]">{{ban.bannedPlayer.name}}</a> ({{ban.banDuration}})
             </div>
         </div>
         <div class="form-group">
