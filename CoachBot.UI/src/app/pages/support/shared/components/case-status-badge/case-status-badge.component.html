@@ -1,0 +1,6 @@
+<container-element [ngSwitch]="caseStatus">
+    <span *ngSwitchCase="caseStatuses.Unassigned" class="badge badge-info" i18n="@@support.caseStatuseses.unassigned">Unassigned</span>
+    <span *ngSwitchCase="caseStatuses.PendingManagerResponse" class="badge badge-warning" i18n="@@support.caseStatuseses.pendingResponse">Pending Support Response</span>
+    <span *ngSwitchCase="caseStatuses.PendingPlayerResponse" class="badge badge-warning" i18n="@@support.caseStatuseses.pendingPlayerResponse">Pending Player Response</span>
+    <span *ngSwitchCase="caseStatuses.Closed" class="badge badge-success" i18n="@@support.caseStatuseses.closed">Closed</span>
+  </container-element>

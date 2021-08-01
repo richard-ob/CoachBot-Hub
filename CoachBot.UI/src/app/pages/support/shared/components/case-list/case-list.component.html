@@ -1,0 +1,32 @@
+<div *ngIf="!cases || cases.length" class="container py-4">
+    <ng-container *ngIf="cases; else spinner">
+        <div class="card card--has-table">
+            <div class="card__header">
+                <h4>My Support Tickets</h4>
+            </div>
+            <div class="card__content">
+                <table class="table table-striped">
+                    <thead>
+                        <th>Title</th>        
+                        <th>Support Type</th>                
+                        <th>Status</th>
+                        <th>Submitted Date</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let case of cases" class="clickable" [routerLink]="['/support/', case.id]">
+                            <td><a [routerLink]="['/support/', case.id]">{{case.caseTitle}}</a></td>
+                            <td>{{case.caseType | caseType}}</td>
+                            <td>
+                                <app-case-status-badge [caseStatus]="case.caseStatus"></app-case-status-badge>
+                            </td>
+                            <td>{{case.createdDate | date:'full'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #spinner>
+        <app-spinner></app-spinner>
+    </ng-template>
+</div>

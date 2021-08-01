@@ -12,6 +12,7 @@ namespace CoachBot.Domain.Model
         Harrassment,
         Racism,
         Homophobia,
+        Sexism,
         RageQuit,
         MatchmakingIssue,
         Other

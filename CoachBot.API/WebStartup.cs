@@ -24,6 +24,7 @@ using Serilog;
 using Discord.Rest;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using MySqlConnector;
 
 namespace CoachBot
 {
@@ -113,6 +114,9 @@ namespace CoachBot
                 .AddTransient<AssetImageService>()
                 .AddTransient<SteamService>()
                 .AddTransient<AnnouncementService>()
+                .AddTransient<CaseService>()
+                .AddTransient<BanService>()
+                .AddTransient<MySqlConnection>(_ => new MySqlConnection(config.SourceBansConfig.MySqlConnectionString))
                 .AddDbContext<CoachBotContext>(ServiceLifetime.Transient);
 
             services.AddProxies();

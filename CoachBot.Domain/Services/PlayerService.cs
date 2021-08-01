@@ -113,7 +113,7 @@ namespace CoachBot.Domain.Services
         {
             return _coachBotContext.Players
                 .AsQueryable()
-                .Where(p => p.Name.Contains(playerName) && p.SteamID != null)
+                .Where(p => (p.Name.Contains(playerName) || playerName == p.Id.ToString()) && p.SteamID != null)
                 .Take(10)
                 .ToList();
         }

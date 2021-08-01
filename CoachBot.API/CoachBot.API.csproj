@@ -21,7 +21,9 @@
   <ItemGroup>
     <Compile Include="Controllers\AnnouncementController.cs" />
     <Compile Include="Controllers\AssetImageController.cs" />
+    <Compile Include="Controllers\BanController.cs" />
     <Compile Include="Controllers\BotController.cs" />
+    <Compile Include="Controllers\CaseController.cs" />
     <Compile Include="Controllers\ChannelController.cs" />
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\DiscordUserController.cs" />

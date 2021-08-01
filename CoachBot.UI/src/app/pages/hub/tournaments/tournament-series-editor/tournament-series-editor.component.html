@@ -60,6 +60,7 @@
                         <label>Tournament Type</label>
                         <select [(ngModel)]="tournament.tournamentType" name="tournamentType" class="form-control"
                             required>
+                            <option [ngValue]="1">Round Robin</option>
                             <option [ngValue]="2">Double Round Robin</option>
                             <option [ngValue]="8">Quadruple Round Robin</option>
                             <option [ngValue]="6">Round Robbin And Knockout</option>

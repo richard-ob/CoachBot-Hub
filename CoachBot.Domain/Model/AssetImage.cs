@@ -18,6 +18,8 @@ namespace CoachBot.Domain.Model
 
         public string FileName { get; set; }
 
+        public bool AllowDirectAccess { get; set; } = true;
+
         [JsonIgnore]
         public string Url { get; set; }
 

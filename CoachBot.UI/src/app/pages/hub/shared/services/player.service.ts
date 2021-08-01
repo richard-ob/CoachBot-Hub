@@ -115,6 +115,10 @@ export class PlayerService {
         return this.http.post<void>(`${environment.apiUrl}/api/player/update-rating`, player);
     }
 
+    updatePlayerDiscordUserId(player: Player) {
+        return this.http.post<void>(`${environment.apiUrl}/api/player/update-discord-user-id`, player);
+    }
+
     updateSteamId(steamId: string): Observable<void> {
         const steamIdDto = {
             steamId

@@ -1,0 +1,21 @@
+
+<div class="py-4 container">
+    <div *ngIf="!isLoading; else spinner" class="card">
+        <div class="card__header">
+            <h4>
+                Edit Ban
+                <div class="float-right">
+                    <a [routerLink]="['/bans']" class="btn btn-secondary btn-xs ml-2"  i18n="@@bans.banList">
+                        Ban List
+                    </a>
+                </div>
+            </h4>
+        </div>            
+        <div class="card__content">
+            <app-ban-editor-form [ban]="ban"></app-ban-editor-form>
+        </div>  
+    </div>
+</div>
+<ng-template #spinner>
+    <app-spinner></app-spinner>
+</ng-template>

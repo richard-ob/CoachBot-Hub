@@ -34,6 +34,7 @@ import localeFr from '@angular/common/locales/fr';
 import localeCS from '@angular/common/locales/cs';
 import localePL from '@angular/common/locales/pl';
 import localeRU from '@angular/common/locales/ru';
+import { SupportModule } from '@pages/support/support.module';
 registerLocaleData(localeKo);
 registerLocaleData(localeEs);
 registerLocaleData(localePt);
@@ -63,6 +64,7 @@ registerLocaleData(localeRU);
     AppRoutingModule,
     HttpClientModule,
     HubModule,
+    SupportModule,
     LoginModule,
     ErrorModule,
     BrowserAnimationsModule,

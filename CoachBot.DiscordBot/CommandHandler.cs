@@ -82,7 +82,7 @@ namespace CoachBot
                 {
                     await message.Channel.SendMessageAsync("", embed: DiscordEmbedHelper.GenerateEmbed($"Read Error: {reader.ErrorReason}", ServiceResponseStatus.Failure));
                 }
-                else if (!result.IsSuccess && result.Error == CommandError.UnknownCommand && channelService.ChannelHasPosition(context.Channel.Id, context.Message.Content.Substring(1)))
+                else if (!result.IsSuccess && result.Error == CommandError.UnknownCommand && channelService.ChannelHasPositionAndActive(context.Channel.Id, context.Message.Content.Substring(1)))
                 {
                     await context.Channel.SendMessageAsync("", embed: matchmakingService.AddPlayer(context.Message.Channel.Id, context.Message.Author, context.Message.Content.Substring(1).ToUpper()));
                     foreach (var teamEmbed in matchmakingService.GenerateTeamList(context.Channel.Id))
@@ -90,7 +90,7 @@ namespace CoachBot
                         await context.Channel.SendMessageAsync("", embed: teamEmbed);
                     }
                 }
-                else if (!result.IsSuccess && result.Error == CommandError.UnknownCommand && channelService.ChannelHasPosition(context.Channel.Id, context.Message.Content.Substring(1), ChannelTeamType.TeamTwo))
+                else if (!result.IsSuccess && result.Error == CommandError.UnknownCommand && channelService.ChannelHasPositionAndActive(context.Channel.Id, context.Message.Content.Substring(1), ChannelTeamType.TeamTwo))
                 {
                     var positionName = context.Message.Content.Substring(1, context.Message.Content.Length - 2).ToUpper();
                     await context.Channel.SendMessageAsync("", embed: matchmakingService.AddPlayer(context.Message.Channel.Id, context.Message.Author, positionName, ChannelTeamType.TeamTwo));

@@ -1,0 +1,84 @@
+<form #banForm="ngForm">
+    <ng-container *ngIf="ban && !isSaving; else spinner">
+        <div *ngIf="!ban.id" class="form-group">
+            <app-player-selector (playerSelected)="setPlayer($event)">
+            </app-player-selector>
+            <div *ngIf="selectedPlayer && !selectedPlayer.discordUserId" class="alert alert-warning">
+                There is no Discord User ID set for this user. If you wish to apply a Discord ban, <a [routerLink]="['/player-profile/', selectedPlayer.id]">please edit this player's profile</a> 
+            </div>
+        </div>
+        <div *ngIf="ban.id" class="form-group">
+            <label for="bannedPlayer" i18n="@@bans.bannedPlayer">Banned Player</label>
+            <div class="text-muted">
+                <a [routerLink]="['/player-profile/', ban.bannedPlayerId]">{{ban.bannedPlayer.name}}</a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="banInfo" class="required" i18n="@@bans.banInfo">Ban Info</label>
+            <textarea type="text" class="form-control" id="banInfo" name="banInfo" required
+                [(ngModel)]="ban.banInfo"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="banType" class="required" i18n="@@bans.banType">Ban Type</label>
+            <select class="form-control" [(ngModel)]="ban.banType" name="banType" id="banType"
+                required>
+                <option [ngValue]="banTypes.Community">{{banTypes.Community | banType}}</option>
+                <option [ngValue]="banTypes.Matchmaking">{{banTypes.Matchmaking | banType}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="banReason" class="required" i18n="@@bans.banReason">Ban Reason</label>
+            <select class="form-control" [(ngModel)]="ban.banReason" name="banReason" id="banReason"
+                required>
+                <option [ngValue]="banReasons.Cheating">{{banReasons.Cheating | banReason}}</option>
+                <option [ngValue]="banReasons.Harrassment">{{banReasons.Harrassment | banReason}}</option>
+                <option [ngValue]="banReasons.Racism">{{banReasons.Racism | banReason}}</option>
+                <option [ngValue]="banReasons.Homophobia">{{banReasons.Homophobia | banReason}}</option>
+                <option [ngValue]="banReasons.Sexism">{{banReasons.Sexism | banReason}}</option>
+                <option [ngValue]="banReasons.RageQuit">{{banReasons.RageQuit | banReason}}</option>
+                <option [ngValue]="banReasons.MatchmakingIssue">{{banReasons.MatchmakingIssue | banReason}}</option>
+                <option [ngValue]="banReasons.Other">{{banReasons.Other | banReason}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Permanent Ban?</label>
+            <label class="checkbox d-block mr-2">            
+                <input type="checkbox" (change)="togglePermanentBan()" name="isPermanentBan"/>
+                <span class="checkbox-indicator"></span>
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="startDate" class="required" i18n="@@bans.startDate">Start Date</label>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend clickable">
+                    <span class="input-group-text" id="basic-addon2" (click)="startDatePicker.open()">
+                        <i class="fas fa-calendar"></i>
+                    </span>
+                </div>
+                <input matInput class="form-control" [matDatepicker]="startDatePicker" (click)="startDatePicker.open()" name="startDate"
+                    [(ngModel)]="ban.startDate">
+            </div>
+        </div>
+        <div *ngIf="!isPermanentBan" class="form-group">
+            <label for="endDate" class="required mb-0" i18n="@@bans.endDate">End Date</label> 
+            <small class="text-muted d-block" style="margin-top: -5px">This is the day the ban should be automatically removed</small>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend clickable">
+                    <span class="input-group-text" id="basic-addon1" (click)="endDatePicker.open()">
+                        <i class="fas fa-calendar"></i>
+                    </span>
+                </div>
+                <input matInput class="form-control" [matDatepicker]="endDatePicker" (click)="endDatePicker.open()" name="endDate"
+                    [(ngModel)]="ban.endDate">
+            </div>
+        </div> 
+        <button type="button" class="btn btn-primary" (click)="saveBan()" [disabled]="!banForm.valid || (!selectedPlayer && !ban.id) || (!isPermanentBan && !ban.endDate)">
+            Save
+        </button>
+    </ng-container>
+    <ng-template #spinner>
+        <app-spinner></app-spinner>
+    </ng-template>
+</form>

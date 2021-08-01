@@ -167,13 +167,14 @@
                             <li routerLinkActive="active"><a routerLink="/media"i18n="@@menu.media">Media</a></li>
                             <li class="has-children" routerLinkActive="active"
                                 (click)="toggleSectionOpen(manualsSection, manualsToggle)">
-                                <a href="javascript:void(0);"i18n="@@menu.manuals">Manuals</a>
+                                <a href="javascript:void(0);"i18n="@@menu.support">Support</a>
                                 <span class="main-nav__toggle" #manualsToggle></span>
                                 <ul class="main-nav__sub" #manualsSection>
                                     <li><a routerLink="/manual" i18n="@@menu.playerManual">Player Manual</a></li>
                                     <li><a routerLink="/troubleshooting"i18n="@@menu.troubleshooting">Troubleshooting</a></li>
                                     <li><a routerLink="/server-manual"i18n="@@menu.serverAdminManual">Server Admin Manual</a></li>
                                     <li><a routerLink="/bot-manual"i18n="@@menu.botManual">Bot Manual</a></li>
+                                    <li><a routerLink="/support"i18n="@@menu.support">Support Tickets</a></li>
                                 </ul>
                             </li>
                             <li class="has-children" routerLinkActive="active"
@@ -222,10 +223,13 @@
                                         <li class="main-nav__title"i18n="@@menu.management">Management</li>
                                         <li *ngIf="player.hubRole >= hubRoles.Administrator"><a
                                                 routerLink="./tournament-creator"i18n="@@menu.competitions">Competitions</a></li>
-                                        <li *ngIf="player.hubRole >= hubRoles.Manager"><a
+                                        <li *ngIf="player.hubRole >= hubRoles.Administrator"><a
                                                 routerLink="./server-manager"i18n="@@menu.servers">Servers</a></li>
+                                        <li *ngIf="player.hubRole >= hubRoles.Administrator"><a
+                                                routerLink="./region-manager"i18n="@@menu.regions">Regions</a></li>                                                
                                         <li *ngIf="player.hubRole >= hubRoles.Manager"><a
-                                                routerLink="./region-manager"i18n="@@menu.regions">Regions</a></li>
+                                            routerLink="./bans" i18n="@@menu.bans">Bans</a>
+                                        </li>
                                         <li *ngIf="player.hubRole >= hubRoles.Administrator"><a
                                                 routerLink="./bot"i18n="@@menu.bot">Bot</a>
                                         </li>

@@ -1,5 +1,6 @@
 ﻿using CoachBot.Domain.Model;
 using CoachBot.Domain.Services;
+using CoachBot.Models;
 using CoachBot.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace CoachBot.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
+    [ApiController]
     [Authorize]
     public class CaseController : Controller
     {
@@ -23,6 +25,17 @@ namespace CoachBot.Controllers
         {
             _caseService = caseService;
             _playerService = playerService;
+        }
+
+        [HttpGet("{caseId}")]
+        public IActionResult GetCase(int caseId)
+        {
+            if (!CanAccessCase(caseId))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(_caseService.GetCase(caseId));
         }
 
         [HttpGet("@me")]
@@ -52,36 +65,34 @@ namespace CoachBot.Controllers
             return Ok(_caseService.GetUnassignedCases());
         }
 
-        [HttpPut]
-        public IActionResult CreateCase(Case caseToCreate)
+        [HubRolePermission(HubRole = PlayerHubRole.Player)]
+        [HttpPost]
+        public IActionResult CreateCase(CreateCaseDto caseToCreate)
         {
-            var caseId = _caseService.CreateCase(caseToCreate);
+            var caseId = _caseService.CreateCase(caseToCreate.Title, caseToCreate.Description, caseToCreate.CaseType, caseToCreate.Images);
 
             return Ok(caseId);
         }
 
         [HubRolePermission(HubRole = PlayerHubRole.Manager)]
-        [HttpPost]
-        public IActionResult UpdateCase(Case caseToUpdate)
+        [HttpPut("{caseId}")]
+        public IActionResult UpdateCase(int caseId, [FromBody]Case caseToUpdate)
         {
             _caseService.UpdateCase(caseToUpdate);
 
             return Ok();
         }
 
-        [HttpPut("{caseId}/notes")]
-        public IActionResult CreateCaseNote(int caseId, CaseNote caseNote)
+        [HubRolePermission(HubRole = PlayerHubRole.Player)]
+        [HttpPost("{caseId}/notes")]
+        public IActionResult CreateCaseNote(int caseId, [FromBody]CreateCaseNoteDto caseNote)
         {
-            var steamId = User.GetSteamId();
-            var player = _playerService.GetPlayerBySteamId(User.GetSteamId());
-            var currentCase = _caseService.GetCase(caseId);
-
-            if (!_playerService.IsManagerOrAbove(steamId) && !(currentCase.CreatedById == player.Id))
+            if (!CanAccessCase(caseId))
             {
                 return Unauthorized();
             }
 
-            _caseService.CreateCaseNote(caseNote);
+            _caseService.CreateCaseNote(caseId, caseNote.Text, caseNote.Images);
 
             return Ok();
         }
@@ -89,16 +100,25 @@ namespace CoachBot.Controllers
         [HttpGet("{caseId}/notes")]
         public IActionResult GetCaseNotes(int caseId)
         {
+            if (!CanAccessCase(caseId)) {
+                return Unauthorized();
+            }
+
+            return Ok(_caseService.GetNotesForCase(caseId));
+        }
+
+        private bool CanAccessCase(int caseId)
+        {
             var steamId = User.GetSteamId();
             var player = _playerService.GetPlayerBySteamId(User.GetSteamId());
             var currentCase = _caseService.GetCase(caseId);
 
             if (!_playerService.IsManagerOrAbove(steamId) && !(currentCase.CreatedById == player.Id))
             {
-                return Unauthorized();
+                return false;
             }
 
-            return Ok(_caseService.GetNotesForCase(caseId));
+            return true;
         }
 
     }

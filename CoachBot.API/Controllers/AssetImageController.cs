@@ -28,9 +28,9 @@ namespace CoachBot.Controllers
         {
             var fileSize = (double)assetImageDto.Base64EncodedImage.Length * 0.72; // Rough estimation of equivalent size
 
-            if (fileSize > 250000)
+            if (fileSize > 750000)
             {
-                return BadRequest("File exceeds 250KB in size");
+                return BadRequest("File exceeds 750KB in size");
             }
 
             if (!Regex.IsMatch(assetImageDto.Base64EncodedImage, "^data:image/(?:png)(?:;charset=utf-8)?;base64,(?:[A-Za-z0-9]|[+/])+={0,2}"))
@@ -38,7 +38,13 @@ namespace CoachBot.Controllers
                 return BadRequest("File is not a valid PNG image");
             }
 
-            return Ok(_assetImageService.CreateAssetImage(assetImageDto.Base64EncodedImage, assetImageDto.FileName, HttpContext.User.GetSteamId()));
+            return Ok(_assetImageService.CreateAssetImage(assetImageDto.Base64EncodedImage, assetImageDto.FileName, HttpContext.User.GetSteamId(), assetImageDto.AllowDirectAccess));
+        }
+
+        [HttpGet()]
+        public void RestoreImages()
+        {           
+            //_assetImageService.RestoreImages();
         }
 
         [HttpGet("{id}")]

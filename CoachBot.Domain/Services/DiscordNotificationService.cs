@@ -1,5 +1,6 @@
 ﻿using CoachBot.Model;
 using CoachBot.Shared.Model;
+using CoachBot.Tools;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
@@ -44,9 +45,13 @@ namespace CoachBot.Domain.Services
             return 0;
         }
 
-        public async Task<ulong> SendChannelMessage(ulong discordChannelId, string message)
+        public async Task<ulong> SendChannelMessage(ulong discordChannelId, string message, string title = null, Color? color = null)
         {
-            return await SendChannelMessage(discordChannelId, new EmbedBuilder().WithDescription(message).Build());
+            var embed = new EmbedBuilder().WithDescription(message).WithColor(color ?? DiscordEmbedHelper.DEFAULT_EMBED_COLOUR);
+
+            if (title != null) embed.WithTitle(title);
+
+            return await SendChannelMessage(discordChannelId, embed.Build());
         }
 
         public async Task<ulong> SendChannelTextMessage(ulong discordChannelId, string message)
@@ -123,6 +128,11 @@ namespace CoachBot.Domain.Services
         public async Task SendAuditChannelMessage(Embed embed)
         {
             await SendChannelMessage(_config.DiscordConfig.AuditChannelId, embed);
+        }
+
+        public async Task SendModChannelMessage(string message, string title)
+        {
+            await SendChannelMessage(_config.DiscordConfig.ModChannelId, message, title);
         }
     }
 }

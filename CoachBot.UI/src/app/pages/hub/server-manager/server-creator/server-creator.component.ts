@@ -55,7 +55,6 @@ export class ServerCreatorComponent implements DoCheck {
         this.serverToCreate = new Server();
         this.createServerModal.fire();
         // tslint:disable-next-line:no-string-literal
-        console.log(this.createServerModal);
     }
 
     addServer() {

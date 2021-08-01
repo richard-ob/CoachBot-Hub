@@ -1,0 +1,84 @@
+<div class="py-4 container">
+    <div *ngIf="case; else spinner" class="card">
+        <div class="card__header">
+            <h4>Support Ticket
+                <div class="float-right">
+                    <ng-container *ngIf="showManagementOptions">                        
+                        <button [disabled]="isUpdatingCase" (click)="claimTicket()" class="btn btn-secondary btn-xs mr-2"  i18n="@@support.claimTicket">
+                            <i *ngIf="isUpdatingCase" class="fas fa-circle-notch fa-spin"></i>&nbsp;
+                            Claim Ticket
+                        </button>
+                        <button *ngIf="case.caseStatus !== caseStatuses.Closed" [disabled]="isUpdatingCase" (click)="closeTicket()" class="btn btn-secondary btn-xs"  i18n="@@support.closeTicket">
+                            <i *ngIf="isUpdatingCase" class="fas fa-circle-notch fa-spin"></i>&nbsp;
+                            Close Ticket
+                        </button>
+                        <button *ngIf="case.caseStatus === caseStatuses.Closed" [disabled]="isUpdatingCase" (click)="reopenTicket()" class="btn btn-secondary btn-xs"  i18n="@@support.reopenTicket">
+                            <i *ngIf="isUpdatingCase" class="fas fa-circle-notch fa-spin"></i>&nbsp;
+                            Reopen Ticket
+                        </button>
+                    </ng-container>
+                    <a [routerLink]="['/support']" class="btn btn-primary btn-xs ml-2"  i18n="@@support.supportHome">
+                        Support Home
+                    </a>
+                </div>
+            </h4>
+        </div>
+        <div class="card__content">
+            <h6 class="mb-1">Details</h6>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <label>Title</label>
+                    <div class="text-muted">{{case.caseTitle}}</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-4">
+                    <label>Status</label>
+                    <div>
+                        <app-case-status-badge [caseStatus]="case.caseStatus"></app-case-status-badge>
+                    </div>
+                </div>
+                <div class="form-group col-4">
+                    <label>Submitted By</label>
+                    <div class="text-muted">
+                        {{case.createdBy.name}}
+                    </div>
+                </div>
+                <div class="form-group col-4">
+                    <label>Assigned To</label>
+                    <div class="text-muted">
+                        <span *ngIf="case.caseManager">{{case.caseManager.name}}</span>                
+                        <span *ngIf="!case.caseManager">Unassigned</span>
+                    </div>
+                </div>
+                <div class="form-group col-4">
+                    <label>Support Type</label>
+                    <div class="text-muted">
+                        {{case.caseType | caseType}}     
+                    </div>
+                </div>
+                <div class="form-group col-4">
+                    <label>Created Date</label>
+                    <div class="text-muted">
+                        {{case.createdDate | date:'full'}}       
+                    </div>
+                </div>
+                <div class="form-group col-4">
+                    <label>Closed Date</label>
+                    <div class="text-muted">
+                        <ng-container *ngIf="case.closedDate">
+                            {{case.closedDate | date:'full'}}  
+                        </ng-container>
+                        <ng-container *ngIf="!case.closedDate">
+                            <span class="text-muted">N/A</span>
+                        </ng-container>     
+                    </div>
+                </div>
+            </div>
+            <app-case-notes [caseId]="caseId" [showNoteCreator]="!case.closedDate"></app-case-notes>
+        </div>
+    </div>    
+    <ng-template #spinner>
+        <app-spinner></app-spinner>
+    </ng-template>
+</div>

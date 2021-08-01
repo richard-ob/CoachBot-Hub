@@ -216,6 +216,7 @@ namespace CoachBot.Database
             modelBuilder.Entity<AssetImage>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<Case>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<CaseNote>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<CaseNoteImage>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
             modelBuilder.Entity<Ban>().Property(m => m.CreatedDate).HasDefaultValueSql("GETDATE()");
 
             // Conversions

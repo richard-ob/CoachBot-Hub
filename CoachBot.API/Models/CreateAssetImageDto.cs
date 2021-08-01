@@ -9,5 +9,8 @@ namespace CoachBot.Models
         public string Base64EncodedImage { get; set; }
 
         public string FileName { get; set; }
+
+        public bool AllowDirectAccess { get; set; } = true;
+
     }
 }

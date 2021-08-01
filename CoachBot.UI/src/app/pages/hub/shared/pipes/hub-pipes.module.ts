@@ -9,6 +9,8 @@ import { TeamTypePipe } from './team-type.pipe';
 import { TournamentMatchDayPipe } from './tournament-match-day.pipe';
 import { FantasyTeamStatusPipe } from './fantasy-team-status.pipe';
 import { EllipsisPipe } from './ellipsis.pipe';
+import { BanReasonPipe } from './ban-reason.pipe';
+import { BanTypePipe } from './ban-type.pipe';
 
 @NgModule({
     declarations: [
@@ -21,7 +23,9 @@ import { EllipsisPipe } from './ellipsis.pipe';
         TeamTypePipe,
         TournamentMatchDayPipe,
         FantasyTeamStatusPipe,
-        EllipsisPipe
+        EllipsisPipe,
+        BanReasonPipe,
+        BanTypePipe
     ],
     exports: [
         TeamRolePipe,
@@ -33,7 +37,9 @@ import { EllipsisPipe } from './ellipsis.pipe';
         TeamTypePipe,
         TournamentMatchDayPipe,
         FantasyTeamStatusPipe,
-        EllipsisPipe
+        EllipsisPipe,
+        BanReasonPipe,
+        BanTypePipe
     ]
 })
 export class HubPipesModule { }

@@ -23,5 +23,19 @@ namespace CoachBot.Domain.Helpers
 
             return w;
         }
+
+        public static string ConvertSteamID64ToSteamID(ulong steamId64)
+        {
+            var steamId64long = MapUlongToLong(steamId64);
+            var authserver = (steamId64long - 76561197960265728) & 1;
+            var authid = (steamId64long - 76561197960265728 - authserver) / 2;
+
+            return $"STEAM_0:{authserver}:{authid}";
+        }
+
+        private static long MapUlongToLong(ulong ulongValue)
+        {
+            return unchecked((long)ulongValue);
+        }
     }
 }

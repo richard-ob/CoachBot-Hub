@@ -7,4 +7,5 @@ export interface AssetImage {
     smallUrl?: string;
     mediumUrl?: string;
     largeUrl?: string;
+    allowDirectAccess?: boolean;
 }

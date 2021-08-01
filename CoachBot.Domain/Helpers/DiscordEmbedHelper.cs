@@ -7,7 +7,7 @@ namespace CoachBot.Tools
 {
     public static class DiscordEmbedHelper
     {
-        private static Color DEFAULT_EMBED_COLOUR = new Color(254, 254, 254);
+        public static Color DEFAULT_EMBED_COLOUR = new Color(254, 254, 254);
 
         public static Embed GenerateSimpleEmbed(string content)
         {

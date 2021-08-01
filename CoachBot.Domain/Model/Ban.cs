@@ -18,7 +18,7 @@ namespace CoachBot.Domain.Model
 
         public BanType BanType { get; set; }
 
-        public BanReason BanReason { get; }
+        public BanReason BanReason { get; set; }
 
         public string BanInfo { get; set; }
 
@@ -26,12 +26,14 @@ namespace CoachBot.Domain.Model
 
         public DateTime? EndDate { get; set; }
 
+        public long? SourceBansId { get; set; }
+
         public int BannedPlayerId { get; set; }
 
         public Player BannedPlayer { get; set; }
 
         [JsonIgnore]
-        public string BanDuration => throw new NotImplementedException();
+        public string BanDuration => "";
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedDate { get; set; }

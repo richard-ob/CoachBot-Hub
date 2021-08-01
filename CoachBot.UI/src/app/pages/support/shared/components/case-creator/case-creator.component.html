@@ -1,0 +1,55 @@
+<div class="py-4 container">
+    <div class="card">
+        <div class="card__header">
+            <h4 i18n="@@support.raiseSupportTicket">Raise Support Ticket</h4>
+        </div>
+        <div class="card__content">
+            <form (ngSubmit)="createCase()" #createCaseForm="ngForm">                
+                <div class="form-group">
+                    <label>
+                        Support Type
+                    </label>
+                    <select [(ngModel)]="newCase.caseType" name="caseType" class="form-control"
+                        required>
+                        <option [ngValue]="null"></option>
+                        <option i18n="@@support.caseTypes.reportPlayer" [ngValue]="caseTypes.ReportPlayer">
+                            Report Player
+                        </option>
+                        <option i18n="@@support.caseTypes.appealBan" [ngValue]="caseTypes.AppealBan">
+                            Appeal Ban
+                        </option>
+                        <option i18n="@@support.caseTypes.feedback" [ngValue]="caseTypes.Feedback">
+                            Feedback
+                        </option>
+                        <option i18n="@@support.caseTypes.issue" [ngValue]="caseTypes.Issue">
+                            Issue
+                        </option>
+                        <option i18n="@@support.caseTypes.query" [ngValue]="caseTypes.Query">
+                            Query
+                        </option>
+                    </select>
+                </div>
+                <div *ngIf="newCase.caseType === caseTypes.Issue" class="alert alert-info">
+                    Please raise any technical issues in our #helpdesk channel on our Discord server - <a href="https://discord.gg/FkT6Q3N">https://discord.gg/FkT6Q3N</a>
+                </div>
+                <ng-container *ngIf="newCase.caseType !== caseTypes.Issue">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input [(ngModel)]="newCase.title" name="caseTitle" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Detail</label>                    
+                        <quill-editor [(ngModel)]="newCase.description" name="caseNote" required></quill-editor>
+                    </div>
+                    <div class="form-group">
+                        <label class="mb-0">Image Attachments</label>
+                        <div style="margin-top: -5px;" class="mb-1"><small class="text-muted">Images must be of type PNG and less than 750KB</small></div>
+                        <app-batch-asset-image-uploader (imageUploaded)="imageUploaded($event)" [allowDirectImageAccess]="false"></app-batch-asset-image-uploader>
+                    </div>
+                    <re-captcha (resolved)="setCaptchaResolved()" siteKey="6Lds7KQbAAAAAJoQh3tW85LRutviEBSnSuN6dQnO" ></re-captcha>
+                    <button class="btn btn-primary btn-sm float-right" type="submit" [disabled]="isCreating || !createCaseForm.valid || !newCase.description || !captchaResolved">Submit</button>
+                </ng-container>
+            </form>
+        </div>
+    </div>
+</div>

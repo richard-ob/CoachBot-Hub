@@ -5,6 +5,8 @@ import { TournamentType } from '../model/tournament-type.enum';
 export class TournamentTypePipe implements PipeTransform {
     transform(tournamentType: TournamentType): string {
         switch (tournamentType) {
+            case TournamentType.RoundRobin:
+                return $localize`:@@tournamentTypes.league:League`;
             case TournamentType.RoundRobinLadder:
                 return $localize`:@@tournamentTypes.ladder:Ladder`;
             case TournamentType.Knockout:

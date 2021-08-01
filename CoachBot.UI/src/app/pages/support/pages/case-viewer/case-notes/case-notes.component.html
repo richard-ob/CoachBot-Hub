@@ -1,0 +1,26 @@
+<h6 class="mb-1">Notes</h6>
+<div class="case-notes mb-4">
+    <ng-container *ngIf="caseNotes && !isLoadingNotes; else spinner">
+        <ng-container *ngFor="let caseNote of caseNotes; let i = index;">
+            <app-case-note [caseNote]="caseNote"></app-case-note>
+            <hr *ngIf="caseNotes.length !== i + 1 && caseNotes.length > 1" />
+        </ng-container>
+    </ng-container>
+    <ng-template #spinner>
+        <app-spinner></app-spinner>
+    </ng-template>
+</div>
+
+<ng-container *ngIf="showNoteCreator">
+    <h6 class="mb-1">Add New Note</h6>
+    <quill-editor [(ngModel)]="newCaseNote.text"></quill-editor>
+    <div class="form-group">
+        <label class="mb-0">Image Attachments</label>
+        <div style="margin-top: -5px;" class="mb-1"><small class="text-muted">Images must be of type PNG and less than 750KB</small></div>
+        <app-batch-asset-image-uploader (imageUploaded)="imageUploaded($event)" [allowDirectImageAccess]="false"></app-batch-asset-image-uploader>
+    </div>
+    <button class="btn btn-primary float-right btn-sm mt-2" (click)="addCaseNote()" [disabled]="isCreatingNote || !newCaseNote.text">    
+        <i *ngIf="isCreatingNote" class="fa fa-circle-notch fa-spin"></i>&nbsp;
+        Add Note
+    </button>
+</ng-container>

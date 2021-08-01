@@ -26,6 +26,9 @@ namespace CoachBot.Domain.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<bool>("AllowDirectAccess")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Base64EncodedImage")
                         .HasColumnType("nvarchar(max)");
 
@@ -60,6 +63,9 @@ namespace CoachBot.Domain.Migrations
                     b.Property<string>("BanInfo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("BanReason")
+                        .HasColumnType("int");
+
                     b.Property<int>("BanType")
                         .HasColumnType("int");
 
@@ -76,6 +82,9 @@ namespace CoachBot.Domain.Migrations
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<long?>("SourceBansId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -192,7 +201,8 @@ namespace CoachBot.Domain.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("CaseNoteId", "AssetImageId");
 

@@ -151,11 +151,13 @@ namespace CoachBot.Domain.Services
             }
         }
 
-        public bool ChannelHasPosition(ulong channelId, string position, ChannelTeamType channelTeamType = ChannelTeamType.TeamOne)
+        public bool ChannelHasPositionAndActive(ulong channelId, string position, ChannelTeamType channelTeamType = ChannelTeamType.TeamOne)
         {
             var channel = GetChannelByDiscordId(channelId);
 
             if (channel == null) return false;
+
+            if (channel.Inactive) return false;
 
             if (channelTeamType == ChannelTeamType.TeamTwo) return channel.ChannelPositions.Any(cp => position.ToUpper().Equals($"{cp.Position.Name.ToUpper()}2"));
 

@@ -94,6 +94,28 @@ namespace CoachBot.Controllers
             return Ok();
         }
 
+        [HubRolePermission(HubRole = PlayerHubRole.Manager)]
+        [HttpPost]
+        [Route("update-discord-user-id")]
+        public IActionResult UpdatePlayerDiscordUserId([FromBody] Player playerToUpdate)
+        {
+            var player = _playerService.GetPlayer(playerToUpdate.Id);
+
+            if (player == null)
+            {
+                return NotFound();
+            }
+
+            if (playerToUpdate.DiscordUserId > 0 && playerToUpdate.DiscordUserId > 100000000)
+            {
+                player.DiscordUserId = playerToUpdate.DiscordUserId;
+            }
+
+            _playerService.UpdatePlayer(player);
+
+            return Ok();
+        }
+
         [HttpPost]
         public PagedResult<Player> PagedMatchList([FromBody]PagedPlayerRequestDto pagedRequest)
         {

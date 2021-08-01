@@ -15,6 +15,13 @@ namespace CoachBot.Shared.Model
         public WebServerConfig WebServerConfig { get; set; }
 
         public AzureAssetsConfig AzureAssetsConfig { get; set; }
+
+        public SourceBansConfig SourceBansConfig { get; set; }
+    }
+    
+    public class SourceBansConfig
+    {
+        public string MySqlConnectionString { get; set; }
     }
 
     public class AzureAssetsConfig
@@ -56,6 +63,8 @@ namespace CoachBot.Shared.Model
         public ulong OwnerGuildId { get; set; }
 
         public ulong AuditChannelId { get; set; } = 642879369366339635;
+
+        public ulong ModChannelId { get; set; } = 642879369366339635;
 
         public ulong ResultStreamChannelId { get; set; } = 741956156985180170;
 

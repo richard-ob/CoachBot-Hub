@@ -67,6 +67,7 @@ import { TeamHeadToHeadModule } from './team-head-to-head/team-head-to-head.modu
 import { GraphModule } from './shared/components/graphs/graph.module';
 import { TournamentMatchListComponent } from './tournaments/tournament-match-list/tournament-match-list.component';
 import { TournamentMatchEditorComponent } from './match-editor/tournament-match-editor/tournament-match-editor.component';
+import { BanManagerModule } from './ban-manager/ban-manager.module';
 
 @NgModule({
   declarations: [
@@ -124,6 +125,7 @@ import { TournamentMatchEditorComponent } from './match-editor/tournament-match-
     TournamentManagerModule,
     TeamHeadToHeadModule,
     BotManagerModule,
+    BanManagerModule,
     MatDatepickerModule,
     MatNativeDateModule,
     BrowserAnimationsModule,

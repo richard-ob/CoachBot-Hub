@@ -12,8 +12,11 @@
                     <div class="player-info__item player-info__item--details" aria-hidden="false">
                         <div class="player-info__title player-info__title--desktop">
                             <h1 class="player-info__name">
-                                <span class="player-info__first-name">{{player.name}} 
+                                <span class="player-info__first-name" style="letter-spacing: 0.1px;">{{player.name}} 
                                     <a *ngIf="currentPlayer && currentPlayer.id === player.id" class="btn btn-primary-inverse btn-xs ml-2" routerLink="/edit-profile" i18n="@@globals.editProfile">Edit Profile</a>
+                                    <a *ngIf="currentPlayer && currentPlayer.hubRole >= playerHubRoles.Manager"
+                                        class="btn btn-primary-inverse btn-xs ml-2 d-xs-none d-lg-inline-block"
+                                        (click)="editDiscordUserIdModal.fire()" i18n="@@playerProfile.editDiscordUserId">Edit Discord User Id</a>
                                 </span>
                             </h1>
                         </div>
@@ -117,6 +120,24 @@
             <div class="form-group">
                 <label i18n="@@globals.rating">Rating</label>
                 <input type="number" class="form-control" name="rating" [(ngModel)]="player.rating">
+            </div>
+        </form>
+        <ng-container *swalPortal="swalTargets.cancelButton" i18n="@@globals.cancel">
+            Cancel
+        </ng-container>
+        <ng-container *swalPortal="swalTargets.confirmButton" i18n="@@globals.save">
+            Save
+        </ng-container>
+    </swal>
+    
+    <swal #editDiscordUserIdModal (confirm)="updateDiscordUserId()">
+        <ng-container *swalPortal="swalTargets.title">
+            <h5 i18n="@@playerProfile.updateDiscordUserId">Update Discord User Id</h5>
+        </ng-container>
+        <form *swalPortal>
+            <div class="form-group">
+                <label i18n="@@globals.discordUserId">Discord User Id</label>
+                <input type="text" class="form-control" name="discordUserId" [(ngModel)]="player.discordUserId">
             </div>
         </form>
         <ng-container *swalPortal="swalTargets.cancelButton" i18n="@@globals.cancel">

@@ -229,7 +229,7 @@ namespace CoachBot.Domain.Services
 
             _coachBotContext.SaveChanges();
 
-            if (playerPosition != null && playerPosition.Lineup != null && playerPosition.Lineup.PlayerSubstitutes.Any())
+            if (playerPosition != null && playerPosition.Lineup != null && position.ToUpper() != "GK" && playerPosition.Lineup.PlayerSubstitutes.Any())
             {
                 var substitute = ReplaceWithSubstitute(playerPosition.Position, playerPosition.Lineup);
                 return GenerateSubReplacementServiceResponse(substitute, playerPosition.Player);
@@ -254,7 +254,7 @@ namespace CoachBot.Domain.Services
             else if (match.LineupAway != null && match.LineupAway.PlayerLineupPositions.Any(ptp => ptp.Player.Id == player.Id && ptp.Lineup.Channel.DiscordChannelId == channelId))
             {
                 var removedPlayer = RemovePlayerFromTeam(match.LineupAway, player);
-                if (match.LineupAway.PlayerSubstitutes.Any())
+                if (match.LineupAway.PlayerSubstitutes.Any() && removedPlayer.Position?.Name?.ToUpper() != "GK")
                 {
                     var substitute = ReplaceWithSubstitute(removedPlayer.Position, match.LineupAway);
                     return GenerateSubReplacementServiceResponse(substitute, player);
@@ -302,7 +302,7 @@ namespace CoachBot.Domain.Services
                         : DiscordEmbedHelper.GenerateEmbed($"Removed **{player.DisplayName}**", ServiceResponseStatus.NegativeSuccess);
                     _discordNotificationService.SendChannelMessage(channelId, embed).Wait();
 
-                    if (signing.Lineup.PlayerSubstitutes.Any())
+                    if (signing.Lineup.PlayerSubstitutes.Any() && signing.Position?.Name?.ToUpper() != "GK")
                     {
                         var sub = ReplaceWithSubstitute(signing.Position, signing.Lineup);
                         _discordNotificationService.SendChannelMessage(channelId, DiscordEmbedHelper.GenerateEmbedFromServiceResponse(GenerateSubReplacementServiceResponse(sub, signing.Player))).Wait();
@@ -536,7 +536,7 @@ namespace CoachBot.Domain.Services
                     var message = $":stadium: **{otherPlayerSigning.Player.DisplayName}** has gone to play another match (**{readiedMatchup.LineupHome.Channel.Team.Name} {readiedMatchup.LineupHome.Channel.Team.BadgeEmote}** vs **{readiedMatchup.LineupAway.Channel.Team.BadgeEmote} {readiedMatchup.LineupAway.Channel.Team.Name}**) and has been removed from the lineup.";
                     await _discordNotificationService.SendChannelMessage(channelId, message);
 
-                    if (otherPlayerSigning.Lineup.PlayerSubstitutes.Any())
+                    if (otherPlayerSigning.Lineup.PlayerSubstitutes.Any() && otherPlayerSigning.Position?.Name?.ToUpper() != "GK")
                     {
                         var sub = ReplaceWithSubstitute(otherPlayerSigning.Position, otherPlayerSigning.Lineup);
                         _discordNotificationService.SendChannelMessage(channelId, DiscordEmbedHelper.GenerateEmbedFromServiceResponse(GenerateSubReplacementServiceResponse(sub, otherPlayerSigning.Player))).Wait();

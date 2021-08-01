@@ -2,6 +2,9 @@
 @import '~open-iconic/font/css/open-iconic-bootstrap.css';
 @import "~nouislider/distribute/nouislider.min.css";
 @import "~ngx-lightbox/lightbox.css";
+@import '~quill/dist/quill.core.css';
+@import '~quill/dist/quill.bubble.css';
+@import '~quill/dist/quill.snow.css';
 
 body {
     min-height: 100vh;
@@ -10,6 +13,10 @@ body {
 .ngx-pagination {
     font-size: 0.7rem;
     font-family: "Montserrat";
+}
+
+.ql-editor {
+    height: 9rem;
 }
 
 .clickable {

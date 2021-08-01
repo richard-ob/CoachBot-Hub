@@ -31,30 +31,44 @@ namespace CoachBot.Domain.Services
 
         public AssetImage GetAssetImage(int id)
         {
-            return _coachBotContext.AssetImages.Single(a => a.Id == id);
+            return _coachBotContext.AssetImages.Single(a => a.Id == id && a.AllowDirectAccess);
         }
 
         public List<AssetImage> GetAssetImages(List<int> ids)
         {
-            return _coachBotContext.AssetImages.AsQueryable().Where(a => ids.Any(i => i == a.Id)).ToList();
+            return _coachBotContext.AssetImages.AsQueryable().Where(a => ids.Any(i => i == a.Id) && a.AllowDirectAccess).ToList();
         }
 
-        public int CreateAssetImage(string base64encodedImage, string fileName, ulong steamUserId)
+        public void RestoreImages()
+        {
+            foreach(var assetImage in _coachBotContext.AssetImages.AsQueryable().Where(a => a.Id >= 9 && a.Id <= 26))
+            {
+                foreach (var assetImageSize in AssetImageSizes.AllSizes)
+                {
+                    UploadImageToAzure(assetImage, assetImageSize.Name, assetImageSize.Width);
+                }
+                assetImage.Url = GenerateImageUri($"{assetImage.Id}_{AssetImageSizes.ASSET_IMAGE_REPLACEMENT_TOKEN}.png").ToString();
+                _coachBotContext.SaveChanges();
+            }
+        }
+
+        public int CreateAssetImage(string base64encodedImage, string fileName, ulong steamUserId, bool allowDirectAccess)
         {
             var player = _coachBotContext.GetPlayerBySteamId(steamUserId);
             var currentDailyAssetCount = _coachBotContext.AssetImages.Count(a => a.CreatedById == player.Id && a.CreatedDate > DateTime.UtcNow.AddDays(-1));
             var fileSize = (Math.Floor((double)base64encodedImage.Length / 3) + 1) * 4 + 1;
 
-            if (currentDailyAssetCount > 10 && !_playerService.IsOwner(steamUserId))
+            if (currentDailyAssetCount > 25 && !_playerService.IsOwner(steamUserId))
             {
-                throw new Exception("User has uploaded 10 images today already");
+                throw new Exception("User has uploaded 25 images today already");
             }
 
             var assetImage = new AssetImage()
             {
                 Base64EncodedImage = base64encodedImage,
                 CreatedById = player.Id,
-                FileName = fileName
+                FileName = fileName,
+                AllowDirectAccess = allowDirectAccess
             };
             _coachBotContext.AssetImages.Add(assetImage);
             _coachBotContext.SaveChanges();

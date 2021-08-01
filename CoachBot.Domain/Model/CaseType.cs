@@ -9,6 +9,7 @@ namespace CoachBot.Domain.Model
     public enum CaseType
     {
         ReportPlayer,
+        AppealBan,
         Feedback,
         Issue,
         Query

@@ -81,4 +81,11 @@ export class PlayerProfileComponent implements OnInit {
             this.isLoading = false;
         });
     }
+
+    updateDiscordUserId() {
+        this.isLoading = true;
+        this.playerService.updatePlayerDiscordUserId(this.player).subscribe(() => {
+            this.isLoading = false;
+        });
+    }
 }
