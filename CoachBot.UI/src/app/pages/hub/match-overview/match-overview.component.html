@@ -447,7 +447,7 @@
                                                 </div>
                                                 {{matchEvent.event}}
                                                 <strong>{{matchEvent.player1SteamId | steamIdToPlayerName:matchData.players}}</strong>
-                                                <span *ngIf="matchEvent.event === eventType.SecondYellowCard">Received a second yellow card</span>
+                                                <span *ngIf="matchEvent.event === eventType.SecondYellowCard">&nbsp;Received a second yellow card</span>
                                                 <ng-container *ngIf="matchEvent.player2SteamId">
                                                     <ng-container [ngSwitch]="matchEvent.event">
                                                         <span *ngSwitchCase="eventType.Goal">&nbsp;<ng-container i18n="@@goals.assistBy">Assist by</ng-container>&nbsp;
