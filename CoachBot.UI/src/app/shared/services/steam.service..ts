@@ -16,7 +16,7 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/user-profiles?steamIdsCsv=${steamIds.join(',')}`;
 
         if (this.isSafari) {
-            url = 'https://api.allorigins.win/get?url=' + url;
+            url = 'https://www.iosoccer.com/cors/xfer.php?url=' + url;
             return this.http.get<SteamUserProfileResponse>(url).pipe(map(response => (response as any).contents));
         }
 
@@ -27,7 +27,7 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/playing-time?steamId=${steamId}`;
 
         if (this.isSafari) {
-            url = 'https://api.allorigins.win/get?url=' + url;
+            url = 'https://www.iosoccer.com/cors/xfer.php?url=' + url;
             return this.http.get<any>(url).pipe(map(response => (response as any).contents));
         }
 
@@ -38,7 +38,7 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/nicknames?steamId=${steamId}`;
 
         if (this.isSafari) {
-            url = 'https://api.allorigins.win/get?url=' + url;
+            url = 'https://www.iosoccer.com/cors/xfer.php?url=' + url;
             return this.http.get<string[]>(url).pipe(map(response => (response as any).contents));
         }
 
@@ -49,7 +49,7 @@ export class SteamService {
         let url = `${environment.apiUrl}/api/steam-proxy/news`;
 
         if (this.isSafari) {
-            url = 'https://api.allorigins.win/get?url=' + url
+            url = 'https://www.iosoccer.com/cors/xfer.php?url=' + url
             return this.http.get<any>(url).pipe(map(response => (response as any).contents));
         }
 
