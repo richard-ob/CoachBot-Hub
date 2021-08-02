@@ -106,12 +106,10 @@ namespace CoachBot.Controllers
                 return NotFound();
             }
 
-            if (playerToUpdate.DiscordUserId > 0 && playerToUpdate.DiscordUserId > 100000000)
+            if (playerToUpdate.DiscordUserId > 0 && playerToUpdate.DiscordUserId > 100000000 && player.SteamID.HasValue)
             {
-                player.DiscordUserId = playerToUpdate.DiscordUserId;
+                _playerService.UpdateDiscordUserId((ulong)playerToUpdate.DiscordUserId, (ulong)player.SteamID);
             }
-
-            _playerService.UpdatePlayer(player);
 
             return Ok();
         }
