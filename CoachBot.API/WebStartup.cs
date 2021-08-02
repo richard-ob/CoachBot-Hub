@@ -124,9 +124,10 @@ namespace CoachBot
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.ExpireTimeSpan = new TimeSpan(7, 0, 0, 0);
+                    options.ExpireTimeSpan = new TimeSpan(365, 0, 0, 0);
                     options.LoginPath = "/unauthorized";
                     options.Cookie.SameSite = SameSiteMode.None;
+                    options.Cookie.MaxAge =  new TimeSpan(365, 0, 0, 0);
                 })
                 .AddSteam()
                 .AddDiscord(x =>
