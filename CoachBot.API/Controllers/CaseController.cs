@@ -51,7 +51,7 @@ namespace CoachBot.Controllers
             return Ok(_caseService.GetCasesForUser(player.Id));
         }
 
-        [HubRolePermission(HubRole = PlayerHubRole.Manager)]
+        [HubRolePermission(HubRole = PlayerHubRole.Player)]
         [HttpGet("all")]
         public IActionResult GetCases()
         {
@@ -97,6 +97,7 @@ namespace CoachBot.Controllers
             return Ok();
         }
 
+        [HubRolePermission(HubRole = PlayerHubRole.Player)]
         [HttpGet("{caseId}/notes")]
         public IActionResult GetCaseNotes(int caseId)
         {

@@ -173,7 +173,7 @@ namespace CoachBot.Controllers
             return Ok();
         }
 
-        [HubRolePermission(HubRole = PlayerHubRole.Administrator)]
+        [HubRolePermission(HubRole = PlayerHubRole.Player)]
         [HttpPost("{matchId}/override")]
         public IActionResult CreateMatchResultOverride([FromBody]MatchResultOverrideDto matchResultOverrideDto, int matchId)
         {
