@@ -56,6 +56,7 @@ namespace CoachBot.Bot
                 await _client.SetGameAsync("IOSoccer", "http://iosoccer.com");
                 _client.ChannelDestroyed += ChannelDestroyed;
                 _client.LeftGuild += GuildDestroyed;
+                _client.UserJoined += UserJoined;
                 _client.GuildMemberUpdated += (userPre, userPost) => { return UserUpdated(userPre, userPost); };
             }
 
@@ -233,6 +234,31 @@ namespace CoachBot.Bot
                         }
                     }
                 }
+            }
+        }
+
+        private async Task UserJoined(SocketGuildUser socketGuildUser)
+        {
+            if (socketGuildUser.Guild.Id == this._config.DiscordConfig.OwnerGuildId)
+            {
+                var dmChannel = await socketGuildUser.GetOrCreateDMChannelAsync();
+                var description = $"Please take time to read #info-and-rules. {Environment.NewLine}{Environment.NewLine}" +
+                    $"European matchmaking happens on this server. Please see #discords for a list of other regional Discord servers. {Environment.NewLine}{Environment.NewLine}" +
+                    $"A short list of the most useful matchmaking bot commands are below: {Environment.NewLine}" +
+                    $"    • Sign for matches in #8v8-all {Environment.NewLine}" +
+                    $"    • Sign for a position by using the `!sign` command, e.g. `!sign LW`. This can be shortened to just `!LW` {Environment.NewLine}" +
+                    $"    • To unsign use either `!unsign` or `!u` {Environment.NewLine}" +
+                    $"    • `!list` to see the current lineup {Environment.NewLine}" +
+                    $"    • When a match is ready, you will receive a DM telling you which server to join. This will also appear in #8v8-all. The default match password is `iosmatch` {Environment.NewLine} {Environment.NewLine} " +
+                    $"**Full bot manual available at https://www.iosoccer.com/bot-manual**";
+
+                var embed = new EmbedBuilder()
+                    .WithDescription(description)
+                    .WithTitle("Welcome to the official IOS Discord server!")
+                    .WithColor(DiscordEmbedHelper.DEFAULT_EMBED_COLOUR)
+                    .Build();
+
+                await dmChannel.SendMessageAsync("", embed: embed);
             }
         }
     }
