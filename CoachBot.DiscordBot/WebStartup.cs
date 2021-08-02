@@ -75,7 +75,8 @@ namespace CoachBot
                 .AddSingleton<BotInstance>()
                 .AddDbContext<CoachBotContext>(ServiceLifetime.Transient);
 
-            services.AddHostedService<TimedHostedService>();
+            services.AddHostedService<TournamentTimedHostedService>();
+            services.AddHostedService<BanTimedHostedService>();
 
             var provider = services.BuildServiceProvider();
             provider.GetService<CoachBotContext>().Initialize();

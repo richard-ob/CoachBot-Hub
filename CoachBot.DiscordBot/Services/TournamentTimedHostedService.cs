@@ -9,12 +9,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-internal class TimedHostedService : IHostedService, IDisposable
+internal class TournamentTimedHostedService : IHostedService, IDisposable
 {
     private Timer _timer;
     private IServiceProvider _services;
 
-    public TimedHostedService(IServiceProvider services)
+    public TournamentTimedHostedService(IServiceProvider services)
     {
         _services = services;
     }
