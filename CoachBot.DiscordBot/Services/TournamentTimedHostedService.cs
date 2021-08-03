@@ -52,7 +52,7 @@ internal class TournamentTimedHostedService : IHostedService, IDisposable
             }
 
             // INFO: Setup servers ~15 minutes for the game
-            var kickOffTimeSetupBuffer = DateTime.UtcNow.AddMinutes(16).ToString("g");
+            var kickOffTimeSetupBuffer = DateTime.UtcNow.AddMinutes(15).ToString("g");
             var kickOffMatches = coachBotContext.Matches
                 .AsQueryable()
                 .Where(m => m.KickOff > DateTime.UtcNow)

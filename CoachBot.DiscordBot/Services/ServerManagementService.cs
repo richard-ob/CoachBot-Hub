@@ -479,6 +479,10 @@ namespace CoachBot.Services
                     {
                         await messenger.ExecuteCommandAsync($"exec {server.Region.MatchFormat}v{server.Region.MatchFormat}.cfg");
                         await messenger.ExecuteCommandAsync("exec league.cfg");
+                        if (server.RegionId == 1)
+                        {
+                            await messenger.ExecuteCommandAsync("sv_restart 15");
+                        }
                         await messenger.ExecuteCommandAsync("sv_singlekeeper 0");
                         await messenger.ExecuteCommandAsync("mp_matchinfo \"Tournament Match\"");
                         await messenger.ExecuteCommandAsync("sv_webserver_matchdata_url \"" + _config.WebServerConfig.HubApiUrl + "/api/match-statistics" + "\"");
