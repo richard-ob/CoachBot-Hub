@@ -64,8 +64,15 @@ namespace CoachBot.Domain.Services
 
             if (player.DiscordUserId.HasValue)
             {
-                var guild = await _discordRestClient.GetGuildAsync(ConfigHelper.GetConfig().DiscordConfig.OwnerGuildId);
-                await guild.AddBanAsync((ulong)player.DiscordUserId, 0, $"IOSoccer Hub Ban ID {banId}");
+                try
+                {
+                    var guild = await _discordRestClient.GetGuildAsync(ConfigHelper.GetConfig().DiscordConfig.OwnerGuildId);
+                    await guild.AddBanAsync((ulong)player.DiscordUserId, 0, $"IOSoccer Hub Ban ID {banId}");
+                }
+                catch
+                {
+
+                }
             }
 
             _mySqlConnection.Close();
@@ -112,8 +119,15 @@ namespace CoachBot.Domain.Services
 
             if (player.DiscordUserId.HasValue && existingBan.EndDate.HasValue && existingBan.EndDate < DateTime.Now)
             {
-                var guild = await _discordRestClient.GetGuildAsync(ConfigHelper.GetConfig().DiscordConfig.OwnerGuildId);
-                await guild.RemoveBanAsync((ulong)player.DiscordUserId);
+                try
+                {
+                    var guild = await _discordRestClient.GetGuildAsync(ConfigHelper.GetConfig().DiscordConfig.OwnerGuildId);
+                    await guild.RemoveBanAsync((ulong)player.DiscordUserId);
+                }
+                catch
+                {
+
+                }
             }
 
             _dbContext.SaveChanges();
