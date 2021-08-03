@@ -234,6 +234,10 @@ namespace CoachBot.Domain.Services
                 var tournamentPhaseId = _coachBotContext.TournamentGroupMatches.Single(m => m.MatchId == match.Id).TournamentPhaseId;
                 _fantasyService.GenerateFantasyPhaseSnapshots(tournamentPhaseId);
                 _tournamentService.ManageTournamentProgress((int)match.TournamentId, match.Id);
+                if (match.Server != null && match.Server.RegionId == 1)
+                {
+                    CheckForIllegalPlayers(matchId);
+                }
             }
 
             if (_config.BotConfig.EnableBotHubIntegration)
@@ -254,6 +258,7 @@ namespace CoachBot.Domain.Services
                 }
             }
         }
+
         public void RegenerateStatsForMatch(int matchId)
         {
             var playerPositionMatchStatistics = _coachBotContext.PlayerPositionMatchStatistics.AsQueryable().Where(m => m.MatchId == matchId);
@@ -268,6 +273,27 @@ namespace CoachBot.Domain.Services
             _coachBotContext.SaveChanges();
 
             GenerateStatsForMatch(matchId);
+        }
+
+        private void CheckForIllegalPlayers(int matchId)
+        {
+            try
+            {
+                var illegalPlayers = _coachBotContext.PlayerMatchStatistics
+                    .AsQueryable()
+                    .Where(p => p.MatchId == matchId && !p.Player.Teams.Any(t => t.TeamId == p.TeamId && t.LeaveDate == null && t.TeamRole != TeamRole.Reserve && t.TeamRole != TeamRole.Loaned))
+                    .Include(p => p.Player)
+                    .Include(p => p.Team);
+
+                foreach (var player in illegalPlayers)
+                {
+                    _discordNotificationService.SendAuditChannelMessage($"{player.Nickname} ({player.Player.Name}) illegally played for {player.Team.Name} in https://www.iosoccer.com/match-overview/{matchId}").Wait();
+                }
+            }
+            catch
+            {
+                _discordNotificationService.SendAuditChannelMessage($"Illegal player check failed for https://www.iosoccer.com/match-overview/{matchId}").Wait();
+            }
         }
 
         private Embed GetResultEmbed(Match match)
