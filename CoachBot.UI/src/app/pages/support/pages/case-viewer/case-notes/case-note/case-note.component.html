@@ -2,8 +2,8 @@
 <span *ngIf="caseNote.createdBy.hubRole >= hubRoles.Manager" class="badge badge-info mx-1">Support</span>
 <span *ngIf="caseNote.createdBy.hubRole < hubRoles.Manager" class="badge badge-secondary mx-1">Player</span>
 <small class="">{{caseNote.createdDate | date:'full'}}</small>
-<div [innerHTML]="caseNote.caseNoteText"></div>
+<div class="case-note-text" [innerHTML]="caseNote.caseNoteText"></div>
 <small *ngIf="albums.length" class="text-muted">Supporting Images</small>
 <div *ngFor="let image of albums; let i = index">
-    <img [src]="image.thumb" (click)="open(0)" class="clickable"/>
+    <img [src]="image.thumb" (click)="open(i)" class="clickable"/>
 </div>
