@@ -381,14 +381,14 @@
                                         <p i18n="@@contact.emailUsBlurb">Feel free to send us any support queries, requests, or enquiries, below.</p>
                                         <form action="https://formspree.io/xeqrepby" method="POST" class="contact-form">
                                             <div class="form-group form-group--xs">
-                                                <input type="email" class="form-control input-sm"
+                                                <input type="email" name="email" class="form-control input-sm" required
                                                     id="contact-form-email" i18n-placeholder="@@contact.yourEmailAddress" placeholder="Your email address...">
                                             </div>
                                             <div class="form-group form-group--xs">
-                                                <textarea class="form-control input-sm" name="contact-form-message"
+                                                <textarea class="form-control input-sm" name="contact-form-message" required
                                                     rows="4" i18n-placeholder="@@contact.yourMessage" placeholder="Your message..."></textarea>
                                             </div>
-                                            <button type="submit" class="btn btn-primary-inverse btn-sm btn-block" i18n="@@contact.sendYourMessage">
+                                            <button  type="submit" class="btn btn-primary-inverse btn-sm btn-block" i18n="@@contact.sendYourMessage">
                                                 Send Your Message
                                             </button>
                                         </form>
