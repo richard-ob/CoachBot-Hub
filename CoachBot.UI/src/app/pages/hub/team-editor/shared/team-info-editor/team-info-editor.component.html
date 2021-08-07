@@ -25,7 +25,7 @@
                     <input type="text" class="form-control" id="teamCode" required [(ngModel)]="team.teamCode"
                         name="teamCode" placeholder="Short team code, e.g. BB" maxlength="6">
                 </div>
-                <div *ngIf="!team.id" class="form-group">
+                <div *ngIf="!team.id || (currentPlayer && currentPlayer.hubRole >= hubRoles.Administrator)" class="form-group">
                     <label class="control-label required" for="teamType" i18n="@@globals.teamType">Team Type</label>
                     <select class="form-control" id="teamType" [(ngModel)]="team.teamType" name="teamType" required>
                         <option [ngValue]="teamTypes.Club" i18n="@@teamTypes.club">Club</option>

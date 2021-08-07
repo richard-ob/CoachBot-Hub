@@ -5,6 +5,9 @@ import { Region } from '@pages/hub/shared/model/region.model';
 import { RegionService } from '@pages/hub/shared/services/region.service';
 import { TeamType } from '@pages/hub/shared/model/team-type.enum';
 import { Router } from '@angular/router';
+import { PlayerService } from '@pages/hub/shared/services/player.service';
+import { Player } from '@pages/hub/shared/model/player.model';
+import { PlayerHubRole } from '@pages/hub/shared/model/player-hub-role.enum';
 
 @Component({
     selector: 'app-team-info-editor',
@@ -15,17 +18,22 @@ export class TeamInfoEditorComponent implements OnInit {
     @Input() team: Team;
     regions: Region[];
     teamTypes = TeamType;
+    currentPlayer: Player;
+    hubRoles = PlayerHubRole;
     duplicateTeamCodeFound = false;
     invalidToken = false;
     isSaving = false;
     isLoading = true;
 
-    constructor(private teamService: TeamService, private regionService: RegionService, private router: Router) { }
+    constructor(private playerService: PlayerService, private teamService: TeamService, private regionService: RegionService, private router: Router) { }
 
     ngOnInit() {
-        this.regionService.getRegions().subscribe(regions => {
-            this.regions = regions;
-            this.isLoading = false;
+        this.playerService.getCurrentPlayer().subscribe((currentPlayer) => {
+            this.currentPlayer = currentPlayer;
+            this.regionService.getRegions().subscribe(regions => {
+                this.regions = regions;
+                this.isLoading = false;
+            });
         });
     }
 
