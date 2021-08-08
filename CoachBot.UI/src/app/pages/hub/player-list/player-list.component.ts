@@ -72,15 +72,28 @@ export class PlayerListComponent implements OnInit {
             this.sortOrder = SortingUtils.getSortOrder(this.sortBy, sortBy, this.sortOrder);
             this.sortBy = sortBy;
         }
-        this.playerService.getPlayerStatistics(page, this.PAGE_SIZE, this.sortBy, this.sortOrder, this.filters).subscribe(response => {
-            this.playerStatistics = response.items;
-            this.currentPage = response.page;
-            this.totalPages = response.totalPages;
-            this.totalItems = response.totalItems;
-            this.isLoading = false;
-            this.isLoadingPage = false;
-            this.getSteamUserProfiles(this.playerStatistics);
-        });
+        console.log(this.filters);
+        if (this.filters.positionName) {
+            this.playerService.getPlayerStatistics(page, this.PAGE_SIZE, this.sortBy, this.sortOrder, this.filters).subscribe(response => {
+                this.playerStatistics = response.items;
+                this.currentPage = response.page;
+                this.totalPages = response.totalPages;
+                this.totalItems = response.totalItems;
+                this.isLoading = false;
+                this.isLoadingPage = false;
+                this.getSteamUserProfiles(this.playerStatistics);
+            });
+        } else {            
+            this.playerService.getPlayerMatchStatisticsTotals(page, this.PAGE_SIZE, this.sortBy, this.sortOrder, this.filters).subscribe(response => {
+                this.playerStatistics = response.items;
+                this.currentPage = response.page;
+                this.totalPages = response.totalPages;
+                this.totalItems = response.totalItems;
+                this.isLoading = false;
+                this.isLoadingPage = false;
+                this.getSteamUserProfiles(this.playerStatistics);
+            });
+        }
     }
 
     setFilters() {
