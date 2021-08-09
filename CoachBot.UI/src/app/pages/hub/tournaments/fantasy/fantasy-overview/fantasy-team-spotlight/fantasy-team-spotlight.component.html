@@ -2,7 +2,7 @@
     (click)="spotlightTeam && navigateToFantasyTeam(spotlightTeam.fantasyTeamId)">
     <div class="card__content  widget-player--soccer">
         <h4 class="statistic-spotlight-title mb-2">
-            <ng-container  i18n="@@fantasy.teamOfThe">Team of the</ng-container>
+            <ng-container  i18n="@@fantasy.teamOfThe">Team of the</ng-container>&nbsp;
             <ng-container *ngIf="!hasTournamentFinished"  i18n="@@fantasy.round">Round</ng-container>
             <ng-container *ngIf="hasTournamentFinished"  i18n="@@globals.tournament">Tournament</ng-container>
         </h4>
