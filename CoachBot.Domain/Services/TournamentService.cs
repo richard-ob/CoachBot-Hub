@@ -266,6 +266,10 @@ namespace CoachBot.Domain.Services
                     GenerateDoubleRoundRobinAndKnockoutTournament(tournament.Id);
                     break;
 
+                case TournamentType.TwoLegKnockout:
+                    GenerateTwoLegKnockoutTournament(tournament.Id);
+                    break;
+
                 default:
                     break;
             }
@@ -666,6 +670,10 @@ namespace CoachBot.Domain.Services
                     GenerateDoubleRoundRobinAndKnockoutSchedule(tournamentId);
                     break;
 
+                case TournamentType.TwoLegKnockout:
+                    GenerateTwoLegKnockoutSchedule(tournamentId);
+                    break;
+
                 default:
                     break;
             }
@@ -1043,20 +1051,7 @@ namespace CoachBot.Domain.Services
                 .Include(t => t.TournamentMatchDays)
                 .First(t => t.Id == tournamentId);
 
-            if (!tournament.TournamentStages.Any(s => s.TournamentGroups.Any()))
-            {
-                throw new Exception("There are no groups for this tournament");
-            }
-
-            if (!tournament.TournamentStages.Any(s => s.TournamentGroups.Any(g => g.TournamentGroupTeams.Any())))
-            {
-                throw new Exception("There are no teams assigned to any groups");
-            }
-
-            if (tournament.TournamentMatchDays == null || !tournament.TournamentMatchDays.Any())
-            {
-                throw new Exception("There are no match days set for this tournament");
-            }
+            ValidateTournamentCanAddMatches(tournament);
 
             RemoveMatchesForTournament(tournamentId);
 
@@ -1208,7 +1203,67 @@ namespace CoachBot.Domain.Services
         }
         #endregion
 
+        #region TwoLegKnockout
+        private void ManageTwoLegKnockoutProgress(int tournamentId, int matchId)
+        {
+
+        }
+
+        private void GenerateTwoLegKnockoutTournament(int tournamentId)
+        {
+            GenerateKnockoutTournament(tournamentId);
+        }
+
+        private void GenerateTwoLegKnockoutSchedule(int tournamentId)
+        {
+            var tournament = _coachBotContext.Tournaments
+                .Include(t => t.TournamentSeries)
+                .Include(t => t.TournamentStages)
+                    .ThenInclude(t => t.TournamentGroups)
+                    .ThenInclude(t => t.TournamentGroupTeams)
+                .Include(t => t.TournamentStages)
+                    .ThenInclude(t => t.TournamentGroups)
+                    .ThenInclude(t => t.TournamentGroupMatches)
+                    .ThenInclude(t => t.Match)
+                .Include(t => t.TournamentMatchDays)
+                .First(t => t.Id == tournamentId);
+
+            ValidateTournamentCanAddMatches(tournament);
+
+            RemoveMatchesForTournament(tournamentId);
+
+            var stage = tournament.TournamentStages.First();
+            var earliestMatchDate = (DateTime)tournament.StartDate;
+            var teams = _coachBotContext.TournamentGroupTeams
+              .AsQueryable()
+              .Where(t => t.TournamentGroup.TournamentStageId == stage.Id)
+              .Select(t => t.Team)
+              .Distinct()
+              .ToList();
+            GenerateKnockoutMatches(tournament, stage, teams, earliestMatchDate, true, true);
+        }
+
+        #endregion TwoLegKnockout
+
         #region Tournament Helpers
+        private void ValidateTournamentCanAddMatches(Tournament tournament)
+        {
+            if (!tournament.TournamentStages.Any(s => s.TournamentGroups.Any()))
+            {
+                throw new Exception("There are no groups for this tournament");
+            }
+
+            if (!tournament.TournamentStages.Any(s => s.TournamentGroups.Any(g => g.TournamentGroupTeams.Any())))
+            {
+                throw new Exception("There are no teams assigned to any groups");
+            }
+
+            if (tournament.TournamentMatchDays == null || !tournament.TournamentMatchDays.Any())
+            {
+                throw new Exception("There are no match days set for this tournament");
+            }
+        }
+
         public void GenerateRoundRobinMatches(Tournament tournament, TournamentStage stage, DateTime startDate)
         {
             var maxNumberOfTeams = _coachBotContext.TournamentGroupTeams
@@ -1312,7 +1367,7 @@ namespace CoachBot.Domain.Services
             
         }
 
-        public void GenerateKnockoutMatches(Tournament tournament, TournamentStage stage, List<Team> teams, DateTime earliestMatchDate, bool teamsKnown)
+        public void GenerateKnockoutMatches(Tournament tournament, TournamentStage stage, List<Team> teams, DateTime earliestMatchDate, bool teamsKnown, bool twoLeg = false)
         {
             var brackets = BracketsHelper.GenerateBrackets(teams.Count);
             var groupId = stage.TournamentGroups.First().Id;
@@ -1342,10 +1397,19 @@ namespace CoachBot.Domain.Services
 
                 var phase = new TournamentPhase()
                 {
-                    Name = roundName,
+                    Name = twoLeg ? roundName + " 1st Leg" : roundName,
                     TournamentStageId = stage.Id
                 };
                 _coachBotContext.TournamentPhases.Add(phase);
+                var secondLegPhase = new TournamentPhase()
+                {
+                    Name = roundName + " 2nd Leg",
+                    TournamentStageId = stage.Id
+                };
+                if (twoLeg)
+                {                    
+                    _coachBotContext.TournamentPhases.Add(secondLegPhase);
+                }
                 _coachBotContext.SaveChanges();
 
                 if (round > 1)
@@ -1425,6 +1489,26 @@ namespace CoachBot.Domain.Services
                         }
                     };
                     _coachBotContext.TournamentGroupMatches.Add(match);
+                    if (twoLeg)
+                    {
+                        var secondLegMatch = new TournamentGroupMatch()
+                        {
+                            TournamentGroupId = groupId,
+                            TournamentPhaseId = secondLegPhase.Id,
+                            TeamHomePlaceholder = awayPlaceholder,
+                            TeamAwayPlaceholder = homePlaceholder,
+                            Match = new Match()
+                            {
+                                TeamHomeId = awayTeamId > 0 ? awayTeamId : (int?)null,
+                                TeamAwayId = homeTeamId > 0 ? homeTeamId : (int?)null,
+                                MatchType = MatchType.Competition,
+                                KickOff = scheduledKickOff,
+                                Format = tournament.Format,
+                                TournamentId = tournament.Id
+                            }
+                        };
+                        _coachBotContext.TournamentGroupMatches.Add(secondLegMatch);
+                    }
                     _coachBotContext.SaveChanges();
                     matches.Add(match);
                     currentMatchNumberOfRound++;

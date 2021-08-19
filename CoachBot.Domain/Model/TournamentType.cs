@@ -10,6 +10,7 @@
         DoubleRoundRobinLadder,
         RoundRobinAndKnockout,
         DoubleRoundRobinAndKnockout,
-        QuadrupleRoundRobin
+        QuadrupleRoundRobin,
+        TwoLegKnockout
     }
 }
