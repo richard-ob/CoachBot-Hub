@@ -18,11 +18,11 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let player of rateablePlayers">
-                        <td>{{player.id}}</td>
+                        <td><a [routerLink]="['/player/', player.id]">{{player.id}}</a></td>
                         <td>{{player.steamID}}</td>
                         <td>{{player.name}}</td>
-                        <td>{{player.teams?.length ? player.teams[0].name : 'Free Agent'}}</td>
-                        <td>Player</td>
+                        <td>{{player.teamName || 'Free Agent'}}</td>
+                        <td>{{(player.teamRole | teamRole) || 'N/A'}}</td>
                         <td>{{player.rating}}</td>
                     </tr>
                 </tbody>
@@ -45,11 +45,11 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let player of ratedPlayers">
-                        <td>{{player.id}}</td>
+                        <td><a [routerLink]="['/player/', player.id]">{{player.id}}</a></td>
                         <td>{{player.steamId}}</td>
                         <td>{{player.name}}</td>
-                        <td>{{player.teams?.length ? player.teams[0].name : 'Free Agent'}}</td>
-                        <td>Player</td>
+                        <td>{{player.teamName || 'Free Agent'}}</td>
+                        <td>{{(player.teamRole | teamRole) || 'N/A'}}</td>
                         <td>{{player.rating}}</td>
                     </tr>
                 </tbody>

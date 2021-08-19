@@ -1,4 +1,5 @@
-﻿using CoachBot.Domain.Services;
+﻿using CoachBot.Domain.Model;
+using CoachBot.Domain.Services;
 using CoachBot.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,13 +22,13 @@ namespace CoachBot.Controllers
         }
 
         [HttpGet("current")]
-        public IEnumerable<Player> GetAllCurrent()
+        public IEnumerable<PlayerRatingSnapshot> GetAllCurrent()
         {
             return _ratingService.GetAllPlayerRatings();
         }
 
         [HttpGet("rateable")]
-        public IEnumerable<Player> GetAllRateable()
+        public IEnumerable<PlayerRatingSnapshot> GetAllRateable()
         {
             return _ratingService.GetRateablePlayers();
         }

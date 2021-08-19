@@ -5,6 +5,7 @@ import { SpinnerModule } from 'src/app/core/components/spinner/spinner.module';
 import { RouterModule } from '@angular/router';
 import { RatingsListComponent } from './ratings-list.component';
 import { RatingsListRoutingModule } from './ratings.routing-module';
+import { HubPipesModule } from '../shared/pipes/hub-pipes.module';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { RatingsListRoutingModule } from './ratings.routing-module';
         RouterModule,
         FormsModule,
         SpinnerModule,
-        RatingsListRoutingModule
+        RatingsListRoutingModule,
+        HubPipesModule
     ]
 })
 export class RatingsListModule { }

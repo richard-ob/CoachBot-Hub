@@ -70,6 +70,7 @@ namespace CoachBot.Database
         public DbSet<CaseNote> CaseNotes { get; set; }
         public DbSet<CaseNoteImage> CaseNoteImages { get; set; }
         public DbSet<Ban> Bans { get; set; }
+        public DbSet<PlayerRatingSnapshot> PlayerRatingSnapshots { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -143,6 +144,7 @@ namespace CoachBot.Database
             modelBuilder.Entity<PlayerPerformanceSnapshot>().HasNoKey();
             modelBuilder.Entity<FantasyTeamRank>().HasNoKey();
             modelBuilder.Entity<FantasyPlayerRank>().HasNoKey();
+            modelBuilder.Entity<PlayerRatingSnapshot>().HasNoKey();
 
             // Many-to-many composite primary keys
             modelBuilder.Entity<PlayerPosition>().HasKey(pp => new { pp.PlayerId, pp.PositionId });
@@ -233,6 +235,7 @@ namespace CoachBot.Database
             modelBuilder.Entity<FantasyTeamRank>().ToTable("FantasyTeamRanks", t => t.ExcludeFromMigrations());
             modelBuilder.Entity<TeamPerformanceSnapshot>().ToTable("TeamPerformanceSnapshots", t => t.ExcludeFromMigrations());
             modelBuilder.Entity<PlayerPerformanceSnapshot>().ToTable("PlayerPerformanceSnapshots", t => t.ExcludeFromMigrations());
+            modelBuilder.Entity<PlayerRatingSnapshot>().ToTable("PlayerRatingSnapshot", t => t.ExcludeFromMigrations());            
 
             // Seed data - disabled after initial run, as the country culture approach is not supported by *nix
             // modelBuilder.Entity<Country>().HasData(CountrySeedData.GetCountries());

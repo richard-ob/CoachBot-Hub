@@ -1,4 +1,5 @@
 ﻿using CoachBot.Database;
+using CoachBot.Domain.Model;
 using CoachBot.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,19 +19,52 @@ namespace CoachBot.Domain.Services
             _coachBotContext = coachBotContext;
         }
 
-        public List<Player> GetAllPlayerRatings()
+        public List<PlayerRatingSnapshot> GetAllPlayerRatings()
         {
-            return _coachBotContext.Players
-                .AsQueryable().Where(p => p.Rating > 0)
-                .ToList();
+            return _coachBotContext
+                    .PlayerRatingSnapshots
+                    .FromSqlInterpolated($@"SELECT  Players.Id as Id,
+                                                Players.SteamID as SteamID,
+                                                Players.Name as Name,
+                                                Players.Rating as Rating,
+                                                PlayerTeams.Name as TeamName,
+                                                PlayerTeams.TeamRole as TeamRole                                        
+                                        FROM dbo.Players Players
+                                        CROSS APPLY 
+                                        (
+	                                        SELECT PlayerTeams.TeamRole, Teams.Name
+	                                        FROM dbo.PlayerTeams PlayerTeams	
+	                                        INNER JOIN dbo.Teams Teams
+		                                        ON Teams.Id = PlayerTeams.TeamId AND Teams.TeamType = 1 AND Teams.RegionId = 1
+                                        WHERE PlayerTeams.PlayerId = Players.Id AND PlayerTeams.IsPending = 0 AND PlayerTeams.LeaveDate IS NULL
+                                        ) PlayerTeams
+                                        WHERE Players.Rating > 0
+                                        ORDER BY PlayerTeams.Name")
+                   .ToList();
         }
 
-        public List<Player> GetRateablePlayers()
+        public List<PlayerRatingSnapshot> GetRateablePlayers()
         {
-            return _coachBotContext.Players
-                .AsQueryable()
-                .Where(p => p.Rating > 0 || _coachBotContext.PlayerTeams.Any(pt => pt.IsPending == false && pt.LeaveDate == null && pt.PlayerId == p.Id && pt.Team.RegionId == 1 && pt.Team.TeamType == Model.TeamType.Club))
-                .ToList();         
+            return _coachBotContext
+                    .PlayerRatingSnapshots
+                    .FromSqlInterpolated($@"SELECT  Players.Id as Id,
+                                                Players.SteamID as SteamID,
+                                                Players.Name as Name,
+                                                Players.Rating as Rating,
+                                                PlayerTeams.Name as TeamName,
+                                                PlayerTeams.TeamRole as TeamRole                                        
+                                        FROM dbo.Players Players
+                                        OUTER APPLY 
+                                        (
+	                                        SELECT PlayerTeams.TeamRole, Teams.Name
+	                                        FROM dbo.PlayerTeams PlayerTeams	
+	                                        INNER JOIN dbo.Teams Teams
+		                                        ON Teams.Id = PlayerTeams.TeamId AND Teams.TeamType = 1 AND Teams.RegionId = 1
+                                        WHERE PlayerTeams.PlayerId = Players.Id AND PlayerTeams.IsPending = 0 AND PlayerTeams.LeaveDate IS NULL
+                                        ) PlayerTeams
+                                        WHERE PlayerTeams.Name IS NOT NULL OR Players.Rating > 0
+                                        ORDER BY PlayerTeams.Name")
+                   .ToList();
         }
     }
 }
