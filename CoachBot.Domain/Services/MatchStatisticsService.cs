@@ -285,9 +285,16 @@ namespace CoachBot.Domain.Services
                     .Include(p => p.Player)
                     .Include(p => p.Team);
 
-                foreach (var player in illegalPlayers)
+                if (illegalPlayers.Any())
                 {
-                    _discordNotificationService.SendAuditChannelMessage($"{player.Nickname} ({player.Player.Name}) illegally played for {player.Team.Name} in https://www.iosoccer.com/match-overview/{matchId}").Wait();
+                    foreach (var player in illegalPlayers)
+                    {
+                        _discordNotificationService.SendAuditChannelMessage($"{player.Nickname} ({player.Player.Name}) illegally played for {player.Team.Name} in https://www.iosoccer.com/match-overview/{matchId}").Wait();
+                    }
+                }
+                else
+                {
+                    _discordNotificationService.SendAuditChannelMessage($"No illegal players found for https://www.iosoccer.com/match-overview/{matchId}").Wait();
                 }
             }
             catch
