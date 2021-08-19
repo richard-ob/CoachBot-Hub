@@ -12,6 +12,7 @@ import { UserPreferenceService, UserPreferenceType } from '@shared/services/user
 export class TeamHeadToHeadSelectorComponent implements OnInit {
   
     isLoading = true;
+    includeInactive = false;
     teams: Team[];
     teamOneCode: string;
     teamTwoCode: string;
@@ -19,9 +20,14 @@ export class TeamHeadToHeadSelectorComponent implements OnInit {
     constructor(private teamService: TeamService, private router: Router, private userPreferenceService: UserPreferenceService) { }
 
     ngOnInit(): void {
+        this.loadTeams();
+    }
+    
+    loadTeams(): void {
+        this.isLoading = true;
         const regionId = this.userPreferenceService.getUserPreference(UserPreferenceType.Region);
         this.teamService.getTeams(regionId, undefined).subscribe((teams) => {
-            this.teams = teams.sort((a, b) => a.name.localeCompare(b.name));
+            this.teams = teams.sort((a, b) => a.name.localeCompare(b.name)).filter(t => !t.inactive || this.includeInactive);
             this.isLoading = false;
         });
     }
