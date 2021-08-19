@@ -116,6 +116,7 @@ namespace CoachBot
                 .AddTransient<AnnouncementService>()
                 .AddTransient<CaseService>()
                 .AddTransient<BanService>()
+                .AddTransient<RatingService>()
                 .AddTransient<MySqlConnection>(_ => new MySqlConnection(config.SourceBansConfig.MySqlConnectionString))
                 .AddDbContext<CoachBotContext>(ServiceLifetime.Transient);
 

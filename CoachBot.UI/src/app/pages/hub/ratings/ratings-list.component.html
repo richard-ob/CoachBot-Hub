@@ -1,0 +1,59 @@
+<div *ngIf="isLoading" class="py-4">
+    <app-spinner></app-spinner>
+</div>
+<div *ngIf="!isLoading" class="container py-4">
+    <div class="card card--has-table">
+        <div class="card__header card__header--has-btn">
+            <h4 i18n="@@globals.ratingsList">Rateable Players List</h4>
+        </div>
+        <div class="card__content table-responsive">
+            <table class="table">
+                <thead>
+                    <th>Player ID</th>
+                    <th>Steam ID</th>
+                    <th>Player Name</th>
+                    <th>Team</th>
+                    <th>Role</th>
+                    <th>Rating</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let player of rateablePlayers">
+                        <td>{{player.id}}</td>
+                        <td>{{player.steamID}}</td>
+                        <td>{{player.name}}</td>
+                        <td>{{player.teams?.length ? player.teams[0].name : 'Free Agent'}}</td>
+                        <td>Player</td>
+                        <td>{{player.rating}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card card--has-table">
+        <div class="card__header card__header--has-btn">
+            <h4 i18n="@@globals.ratingsList">Rated Player List</h4>
+        </div>
+        <div class="card__content table-responsive">
+            <table class="table">
+                <thead>
+                    <th>Player ID</th>
+                    <th>Steam ID</th>
+                    <th>Player Name</th>
+                    <th>Team</th>
+                    <th>Role</th>
+                    <th>Rating</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let player of ratedPlayers">
+                        <td>{{player.id}}</td>
+                        <td>{{player.steamId}}</td>
+                        <td>{{player.name}}</td>
+                        <td>{{player.teams?.length ? player.teams[0].name : 'Free Agent'}}</td>
+                        <td>Player</td>
+                        <td>{{player.rating}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

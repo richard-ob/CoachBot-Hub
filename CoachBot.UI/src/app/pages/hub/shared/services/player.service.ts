@@ -42,6 +42,14 @@ export class PlayerService {
         return this.http.get<Player>(`${environment.apiUrl}/api/player/${playerId}`);
     }
 
+    getRateablePlayers(): Observable<Player[]> {
+        return this.http.get<Player[]>(`${environment.apiUrl}/api/rating/rateable`);
+    }
+
+    getRatedPlayers(): Observable<Player[]> {
+        return this.http.get<Player[]>(`${environment.apiUrl}/api/rating/current`);
+    }
+
     getPlayerStatistics(page: number, pageSize = 10, sortBy: string = null, sortOrder: string, filters: PlayerStatisticFilters)
         : Observable<PagedResult<PlayerStatistics>> {
         return this.http.post<PagedResult<PlayerStatistics>>(

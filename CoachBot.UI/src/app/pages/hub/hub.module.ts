@@ -68,6 +68,7 @@ import { GraphModule } from './shared/components/graphs/graph.module';
 import { TournamentMatchListComponent } from './tournaments/tournament-match-list/tournament-match-list.component';
 import { TournamentMatchEditorComponent } from './match-editor/tournament-match-editor/tournament-match-editor.component';
 import { BanManagerModule } from './ban-manager/ban-manager.module';
+import { RatingsListModule } from './ratings/ratings.module';
 
 @NgModule({
   declarations: [
@@ -137,6 +138,7 @@ import { BanManagerModule } from './ban-manager/ban-manager.module';
     ThSorterModule,
     TeamNameDisplayModule,
     MatchStatisticsModule,
+    RatingsListModule,
     GraphModule,
     TimepickerModule.forRoot()
   ],

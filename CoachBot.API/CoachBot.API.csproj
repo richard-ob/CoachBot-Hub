@@ -41,6 +41,7 @@
     <Compile Include="Controllers\PlayerStatisticsController.cs" />
     <Compile Include="Controllers\PlayerTeamController.cs" />
     <Compile Include="Controllers\PositionController.cs" />
+    <Compile Include="Controllers\RatingsController.cs" />
     <Compile Include="Controllers\RegionController.cs" />
     <Compile Include="Controllers\ScorePredictionController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
