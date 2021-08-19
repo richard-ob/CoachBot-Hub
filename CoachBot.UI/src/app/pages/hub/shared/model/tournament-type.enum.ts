@@ -7,5 +7,6 @@ export enum TournamentType {
     DoubleRoundRobinLadder,
     RoundRobinAndKnockout,
     DoubleRoundRobinAndKnockout,
-    QuadrupleRoundRobin
+    QuadrupleRoundRobin,
+    TwoLegKnockout
 }

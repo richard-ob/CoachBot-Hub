@@ -19,6 +19,8 @@ export class TournamentTypePipe implements PipeTransform {
                 return $localize`:@@tournamentTypes.league:League`;
             case TournamentType.QuadrupleRoundRobin:
                 return $localize`:@@tournamentTypes.league:League`;
+            case TournamentType.TwoLegKnockout:
+                return $localize`:@@tournamentTypes.league:Two Leg Knockout`;
             default:
                 return '';
         }
