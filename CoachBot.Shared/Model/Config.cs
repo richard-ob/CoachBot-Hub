@@ -68,6 +68,8 @@ namespace CoachBot.Shared.Model
 
         public ulong ResultStreamChannelId { get; set; } = 741956156985180170;
 
+        public ulong BanListChannelId { get; set; } = 600289213702864944;
+
         public List<ulong> EmoteGuilds { get; set; } = new List<ulong>();
     }
 
