@@ -7,4 +7,5 @@ export interface CaseNote {
     caseNoteImages: CaseNoteImage[];
     createdDate?: Date;
     createdBy?: Player;
+    createdById?: number;
 }
