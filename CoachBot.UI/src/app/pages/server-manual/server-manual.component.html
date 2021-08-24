@@ -11,11 +11,11 @@
                 feel free to ask in <code>#helpdesk</code> on <a href="https://discord.gg/FkT6Q3N">our Discord
                     Server</a>.
             </p>
-            <h6 class="mb-1" i18n="@@serverManual.consoleCommands">Server console commands and variables</h6>
+            <h6 class="mb-1" i18n="@@serverManual.consoleCommands">Common Server console commands and variables</h6>
             <p class="mb-0" i18n="@@serverManual.consoleCommands.blurb"><em>Note: If you execute these commands from the client console you need to set
                     <code>rcon_password x</code> in <code>cfg\server.cfg</code> and write <code>rcon</code> before
                     the actual command.</em></p>
-            <ul>
+            <ul class="mb-0">
                 <li i18n="@@serverManual.consoleCommands.execCfg">
                     <strong><code>exec x.cfg</code></strong>: Executes a config file in the <code>cfg</code> folder
                     named x.</li>
@@ -29,6 +29,8 @@
                 <li i18n="@@serverManual.consoleCommands.botkeepers">
                     <strong><code>mp_botkeepers x</code></strong>: 1 to enable AI keepers, 0 for human keepers.</li>
             </ul>
+
+            <small>An exhaustive list is available at the bottom of this page</small>
 
             <h6 class="mb-1" i18n="@@serverManual.windowsInstall">Windows dedicated server installation example</h6>
             <ol>
@@ -83,6 +85,266 @@
                 <li><a href="https://developer.valvesoftware.com/wiki/Sv_downloadurl"
                         rel="nofollow noopener">https://developer.valvesoftware.com/wiki/Sv_downloadurl</a></li>
             </ul>
+
+            <h6 class="mb-1">Server Commands</h6>
+            <table class="table table-striped table-condensed table-bordered">
+                <thead>
+                   <tr>
+                       <th>Command</th>
+                       <th>Example</th>
+                       <th>Information</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <tr>
+                      <td>rcon_password</td>
+                      <td>rcon_password serverpassword</td>
+                      <td>Used to gain access to the server's administration commands.</td>
+                   </tr>
+                   <tr>
+                      <td>rcon </td>
+                      <td>rcon command</td>
+                      <td>Used to invoke rcon for usage of admin commands in the server.</td>
+                   </tr>
+                   <tr>
+                      <td>quit</td>
+                      <td>rcon quit</td>
+                      <td>Restarts the server if a problem exists in it.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_teamkits</td>
+                      <td>rcon mp_teamkits 1 2</td>
+                      <td>Sets specific team kits. The first number sets the kit for the home team and the second one sets it for the away team. You can also search for specific team kits by doing mp_teamkits teamname.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_restart</td>
+                      <td>rcon sv_restart 1</td>
+                      <td>Sets a timer to start the match. It is measured in minutes, so sv_restart 1 makes the match start in 1 minute, 0.5 in half a minute, 0 starts the match imediately and -1 sets the server to training mode.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_singlekeeper</td>
+                      <td>rcon sv_singlekeeper 1</td>
+                      <td>Activates/Disables single keeper mode in the server. 1 activates it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>bench</td>
+                      <td>rcon bench name</td>
+                      <td>Benches a player through their in-game name.</td>
+                   </tr>
+                   <tr>
+                      <td>status</td>
+                      <td>rcon status</td>
+                      <td>Displays information about the players currently in the server, including IP, SteamID and game ID.</td>
+                   </tr>
+                   <tr>
+                      <td>benchid</td>
+                      <td>rcon benchid 7</td>
+                      <td>Benches a player determined on their GameID, obtainable through the "status" command.</td>
+                   </tr>
+                   <tr>
+                      <td>benchall</td>
+                      <td>rcon benchall 0</td>
+                      <td>Benches every player in the server. To do it, you must type rcon benchall 0.</td>
+                   </tr>
+                   <tr>
+                      <td>say</td>
+                      <td>rcon say Hello</td>
+                      <td>Displays a message in the universal chat of the server as "Stadium announcer".</td>
+                   </tr>
+                   <tr>
+                      <td>sv_alltalk</td>
+                      <td>rcon sv_alltalk 1</td>
+                      <td>Enables/Disables global voice chat. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_custom_assets</td>
+                      <td>rcon sv_custom_assets 1</td>
+                      <td>Enables/Disables the usage of custom assets in the server. 1 enables it and 0 disables it</td>
+                   </tr>
+                   <tr>
+                      <td>sv_gravity</td>
+                      <td>rcon sv_gravity 900</td>
+                      <td>Modifies the ammount of gravity in the server. Default value is 900.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_shield_block_opponent_half</td>
+                      <td>rcon mp_shield_block_opponent_half 0</td>
+                      <td>Used to enable or disable the midfield shield. 1 enables it 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>exec</td>
+                      <td>rcon exec 8v8</td>
+                      <td>Executes a .cfg file. To execute a certain type of match use rcon exec yxy, to execute official matches use rcon exec league or rcon exec cup, accordingly.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_matchminute</td>
+                      <td>rcon sv_matchminute 45</td>
+                      <td>Sets the match timer to a specific minute in the match.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_matchgoalshome</td>
+                      <td>rcon sv_matchgoalshome 3</td>
+                      <td>Sets the number of goals the home team has on the scoreboard.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_matchgoalsaway</td>
+                      <td>rcon sv_matchgoalsaway 2</td>
+                      <td>Sets the number of goals the away team has on the scoreboard.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_endmatch</td>
+                      <td>rcon sv_endmatch</td>
+                      <td>Ends an ongoing match.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_maxplayers</td>
+                      <td>rcon mp_maxplayers 8</td>
+                      <td>Defines the number of players allowed on each side.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_starttimeout</td>
+                      <td>rcon sv_starttimeout</td>
+                      <td>Starts a forced timeout.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_endtimeout</td>
+                      <td>rcon sv_endtimeout</td>
+                      <td>Ends a forced timeout.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_penalties</td>
+                      <td>rcon mp_penalties 1</td>
+                      <td>Enables/Disables penalty shootout in a match. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_extratime</td>
+                      <td>rcon mp_extratime 1</td>
+                      <td>Enables/Disables extra time in a match. 1 enables it and 1 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_wakeupcall</td>
+                      <td>rcon sv_wakeupcall</td>
+                      <td>Sends a message on the server alerting players to move.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_removeplayercardban id</td>
+                      <td>rcon sv_removeplayercardban 12</td>
+                      <td>Removes a player's red card ban through their GameID</td>
+                   </tr>
+                   <tr>
+                      <td>sv_replay_instant_enabled</td>
+                      <td>rcon sv_replay_instant_enabled 1</td>
+                      <td>Enables/disables replays after a goal is scored.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_playerrotation</td>
+                      <td>rcon sv_playerrotation 0</td>
+                      <td>Enables/Disables player rotation through positions. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_propcreation </td>
+                      <td>rcon sv_propcreation 1</td>
+                      <td>Enables/Disables prop creation in the server. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_physicsprops</td>
+                      <td>rcon sv_physicsprops 1</td>
+                      <td>Enables/Disables physics for props. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_resumematch</td>
+                      <td>rcon sv_resumematch</td>
+                      <td>Resumes the ongoing match.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_cheats</td>
+                      <td>rcon sv_cheats 1</td>
+                      <td>Allows/Disallows cheat commands. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>sv_bots_fill_field</td>
+                      <td>rcon sv_bots_fill_field 1</td>
+                      <td>Fills every available position on the field with bots.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_humankeepers</td>
+                      <td>rcon mp_humankeepers 1</td>
+                      <td>Enables/Disables human GKs. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_botkeepers</td>
+                      <td>rcon mp_botkeepers 0</td>
+                      <td>Enables/Disables bot GKs. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_timelimit_match</td>
+                      <td>mp_timelimit_match 20</td>
+                      <td>Defines the match time in minutes. For 4v4 the default is 10 and for 8v8 the default is 20. Maximum is 90.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_timelimit_part</td>
+                      <td>rcon mp_timelimit_part 20</td>
+                      <td>There are various instances to replace part, and they are: match, warmup, cooldown, halftime, extratime_halftime, extratime_intermission and penalties_intermission</td>
+                   </tr>
+                   <tr>
+                      <td>mp_goldengoal</td>
+                      <td>rcon mp_goldengoal 1</td>
+                      <td>Enables/Disables golden goal mode. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_offside</td>
+                      <td>rcon mp_offside 0</td>
+                      <td>Enables/Disables offsides. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td> mp_serverinfo</td>
+                      <td>rcon mp_serverinfo NTA's home</td>
+                      <td>Sets the server info. Server info is visible upon pressing tab and looking at the top left corner. Default in IOS servers is ""IOSoccer Server - Enjoy your stay""
+                         <br>
+                      </td>
+                   </tr>
+                   <tr>
+                      <td>mp_timeoutcount</td>
+                      <td>rcon mp_timeoutcount 1</td>
+                      <td>Defines how many times a team can call for a timeout during a match. The default is 3 for friendlies and mix matches.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_timeout_duration</td>
+                      <td>rcon mp_timeout_duration 3</td>
+                      <td>Defines how long a timeout can take, during all it's calls. The default value is 5.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_botkeeperspeed</td>
+                      <td>rcon mp_botkeeperspeed 90</td>
+                      <td>Defines botkeepers' speed, from a range of 0 to 100. Default is 100.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_botkeeperdelay</td>
+                      <td>rcon mp_botkeeper_delay 40</td>
+                      <td>Defines botkeepers' response time in ms. Default is 0.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_player_model_scale id</td>
+                      <td>rcon mp_player_model_scale 23 200</td>
+                      <td>Defines a player's size from a range of 0-255 (being the default 155) through their GameID</td>
+                   </tr>
+                   <tr>
+                      <td>mp_chat_match_captain_only </td>
+                      <td>rcon mp_chat_match_captain_only 1</td>
+                      <td>Enables/Disables captain exclusive chat. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_chat_intermissions_captain_only</td>
+                      <td>rcon mp_chat_intermissions_captain_only 1</td>
+                      <td>Enables/Disables captain exclusive chat during intermissions. 1 enables it and 0 disables it.</td>
+                   </tr>
+                   <tr>
+                      <td>mp_maxprops</td>
+                      <td>rcon mp_maxprops 20</td>
+                      <td>Defines how many props can be spawned by a single player.</td>
+                   </tr>
+                </tbody>
+             </table>
         </div>
     </div>
 </div>
