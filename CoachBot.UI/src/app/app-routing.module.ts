@@ -32,6 +32,7 @@ import { TroubleshootingComponent } from '@pages/troubleshooting/troubleshooting
 import { BotManualComponent } from '@pages/bot-manual/bot-manual.component';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { TournamentMatchListComponent } from '@pages/hub/tournaments/tournament-match-list/tournament-match-list.component';
+import { TournamentMatchCreatorComponent } from '@pages/hub/tournaments/tournament-match-creator/tournament-match-creator.component';
 
 const routes: Routes = [
   {
@@ -182,6 +183,12 @@ const routes: Routes = [
     path: 'match-editor/:id',
     component: MatchEditorComponent,
     data: { title: $localize`:@@globals.matchEditor:Match Editor` },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'tournament/:id/:tournamentGroupId/tournament-match-creator',
+    component: TournamentMatchCreatorComponent,
+    data: { title: $localize`:@@globals.tournamentMatchCreator:Tournament Match Creator` },
     canActivate: [AuthGuard]
   },
   {

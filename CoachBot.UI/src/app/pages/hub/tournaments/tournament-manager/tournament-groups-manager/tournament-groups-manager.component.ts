@@ -13,7 +13,6 @@ export class TournamentGroupsManagerComponent implements OnInit {
     tournamentId: number;
     tournament: Tournament;
     tournamentGroup: TournamentGroup = new TournamentGroup();
-    isSaving = false;
     isLoading = true;
 
     constructor(
@@ -61,6 +60,13 @@ export class TournamentGroupsManagerComponent implements OnInit {
 
     editMatch(matchId: number) {
         this.router.navigate(['/match-editor/', matchId]);
+    }
+
+    deleteMatch(tournamentGroupMatchId: number) {
+        this.isLoading = true;
+        this.tournamentService.deleteTournamentGroupMatch(tournamentGroupMatchId).subscribe(() => {
+            this.loadTournament();
+        });
     }
 
 }

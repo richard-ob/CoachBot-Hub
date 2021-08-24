@@ -1,62 +1,72 @@
-<div class="py-4">
-    <app-spinner *ngIf="isLoading" [verticalMargins]="false"></app-spinner>
+<div *ngIf="isLoading" class="py-4">
+    <app-spinner></app-spinner>
 </div>
-<ng-container *ngIf="!isLoading && !accessDenied">
-    <div class="container pb-3">
-        <div class="form-group">
-            <label i18n="@@globals.tournamentTeamHomePlaceholder">Team Home Placeholder</label>
-            <input class="form-control" type="text" name="teamHomePlaceholder" [(ngModel)]="tournamentGroupMatch.teamHomePlaceholder">
+<div *ngIf="!isLoading && !accessDenied" class="container py-4">
+    <div class="card">
+        <div class="card__header">
+            <h4 i18n="@@globals.ratingsList">Tournament Match Creator</h4>
         </div>
-        <div class="form-group">
-            <label i18n="@@globals.tournamentTeamAwayPlaceholder">Team Away Placeholder</label>
-            <input class="form-control" type="text" name="teamAwayPlaceholder" [(ngModel)]="tournamentGroupMatch.teamAwayPlaceholder">
+        <div class="card__content"> 
+            <form #tournamentMatchCreatorForm="ngForm">         
+                <div class="form-group">
+                    <label i18n="@@globals.tournamentTeamHomePlaceholder">Team Home Placeholder</label>
+                    <input class="form-control" type="text" name="teamHomePlaceholder" [(ngModel)]="tournamentGroupMatch.teamHomePlaceholder" placeholder="E.g. Group A 1st Place">
+                </div>
+                <div class="form-group">
+                    <label i18n="@@globals.tournamentTeamAwayPlaceholder">Team Away Placeholder</label>
+                    <input class="form-control" type="text" name="teamAwayPlaceholder" [(ngModel)]="tournamentGroupMatch.teamAwayPlaceholder" placeholder="E.g. Group A 3rd Place">
+                </div>
+                <div class="form-group">
+                    <label i18n="@@globals.homeTeam">Home Team</label>
+                    <select [(ngModel)]="tournamentGroupMatch.match.teamHomeId" name="teamHome" class="form-control" required>
+                        <option *ngFor="let team of teams" [ngValue]="team.id">{{team.name}} ({{team.teamCode}})
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label i18n="@@globals.awayTeam">Away Team</label>
+                    <select [(ngModel)]="tournamentGroupMatch.match.teamAwayId" name="teamAway" class="form-control" required>
+                        <option *ngFor="let team of teams" [ngValue]="team.id">{{team.name}} ({{team.teamCode}})
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label i18n="@@globals.scheduledKickOff">Scheduled Kick Off</label>
+                    <div class="form-control-static mb-2">
+                        {{tournamentGroupMatch.match.kickOff | date:'full'}}
+                    </div>
+                    <div class="border rounded px-4 pt-4 col-md-6">
+                        <dl-date-time-picker startView="day" maxView="year" minView="minute" minuteStep="1"
+                            [(ngModel)]="tournamentGroupMatch.match.kickOff">
+                        </dl-date-time-picker>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label i18n="@@globals.phase">Phase</label>
+                    <select [(ngModel)]="tournamentGroupMatch.tournamentPhaseId" name="phase" class="form-control" required>
+                        <option *ngFor="let phase of tournamentPhases" [ngValue]="phase.id">{{phase.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label i18n="@@globals.server">Server</label>
+                    <select [(ngModel)]="tournamentGroupMatch.match.serverId" name="server" class="form-control" required>
+                        <option *ngFor="let server of servers" [ngValue]="server.id">{{server.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label i18n="@@globals.map">Map</label>
+                    <select [(ngModel)]="tournamentGroupMatch.match.mapId" name="map" class="form-control" required>
+                        <option *ngFor="let map of maps" [ngValue]="map.id">{{map.name}}</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" (click)="createMatch()" type="button" i18n="@@globals.save" [disabled]="!tournamentMatchCreatorForm.valid">Save</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label i18n="@@globals.homeTeam">Home Team</label>
-            <select [(ngModel)]="tournamentGroupMatch.match.teamHomeId" name="teamHome" class="form-control">
-                <option *ngFor="let team of teams" [ngValue]="team.id">{{team.name}} ({{team.teamCode}})
-                </option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label i18n="@@globals.awayTeam">Away Team</label>
-            <select [(ngModel)]="tournamentGroupMatch.match.teamAwayId" name="teamAway" class="form-control">
-                <option *ngFor="let team of teams" [ngValue]="team.id">{{team.name}} ({{team.teamCode}})
-                </option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label i18n="@@globals.scheduledKickOff">Scheduled Kick Off</label>
-            <div class="form-control-static mb-2">
-                {{match.kickOff | date:'full'}}
-                <button type="button" class="btn btn-primary btn-xs ml-2"
-                    (click)="showDatepicker = !showDatepicker" i18n="@@globals.edit">
-                    Edit
-                </button>
-            </div>
-            <div *ngIf="showDatepicker" class="border rounded px-4 pt-4  col-md-6">
-                <dl-date-time-picker startView="day" maxView="year" minView="minute" minuteStep="1"
-                    [(ngModel)]="tournamentGroupMatch.match.kickOff">
-                </dl-date-time-picker>
-            </div>
-        </div>        
-        <div class="form-group">
-            <label i18n="@@globals.server">Server</label>
-            <select [(ngModel)]="tournamentGroupMatch.match.serverId" name="server" class="form-control">
-                <option *ngFor="let server of servers" [ngValue]="server.id">{{server.name}}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label i18n="@@globals.map">Map</label>
-            <select [(ngModel)]="tournamentGroupMatch.match.mapId" name="map" class="form-control">
-                <option *ngFor="let map of maps" [ngValue]="map.id">{{map.name}}</option>
-            </select>
-        </div>
-        <button class="btn btn-primary" (click)="updateMatch()" type="button" i18n="@@globals.save">Save</button>
     </div>
-</ng-container>
+</div>
 <div *ngIf="accessDenied" class="container">
     <div class="alert alert-danger">
         You must be a tournament organiser to view and edit the match list
     </div>
 </div>
+

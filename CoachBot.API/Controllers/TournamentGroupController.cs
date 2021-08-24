@@ -96,6 +96,12 @@ namespace CoachBot.Controllers
             return Ok();
         }
 
+        [HttpGet("{tournamentGroupId}/teams")]
+        public List<Team> GetTournamentGroupTeams(int tournamentGroupId)
+        {
+            return _tournamentService.GetTournamentGroupTeams(tournamentGroupId);
+        }
+
         [HttpGet("{tournamentGroupId}/standings")]
         public List<TournamentGroupStanding> GetTournamentStandings(int tournamentGroupId)
         {

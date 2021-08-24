@@ -124,6 +124,12 @@ namespace CoachBot.Controllers
             return Ok();
         }
 
+        [HttpGet("{id}/phases")]
+        public List<TournamentPhase> GetTournamentPhases(int id)
+        {
+            return _tournamentService.GetTournamentPhases(id);
+        }
+
         [HttpGet("{id}/current-phase")]
         public TournamentPhase GetCurrentPhase(int id)
         {

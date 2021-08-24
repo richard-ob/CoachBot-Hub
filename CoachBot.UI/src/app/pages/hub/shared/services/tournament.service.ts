@@ -87,6 +87,10 @@ export class TournamentService {
     removeTournamentGroupTeam(teamId: number, tournamentGroupId: number): Observable<void> {
         return this.http.delete<void>(`${environment.apiUrl}/api/tournament-groups/${tournamentGroupId}/teams/${teamId}`);
     }
+    
+    getTournamentGroupTeams(tournamentGroupId: number): Observable<Team[]> {
+        return this.http.get<Team[]>(`${environment.apiUrl}/api/tournament-groups/${tournamentGroupId}/teams`);
+    }
 
     getTournamentStaff(tournamentId: number): Observable<TournamentStaff[]> {
         return this.http.get<TournamentStaff[]>(`${environment.apiUrl}/api/tournaments/${tournamentId}/staff`);
@@ -106,6 +110,10 @@ export class TournamentService {
 
     getTournamentTeams(tournamentId: number): Observable<Team[]> {
         return this.http.get<Team[]>(`${environment.apiUrl}/api/tournaments/${tournamentId}/teams`);
+    }
+    
+    getTournamentPhases(tournamentId: number): Observable<TournamentPhase[]> {
+        return this.http.get<TournamentPhase[]>(`${environment.apiUrl}/api/tournaments/${tournamentId}/phases`);
     }
 
     getCurrentPhase(tournamentId: number): Observable<TournamentPhase> {

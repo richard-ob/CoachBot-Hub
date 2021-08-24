@@ -343,6 +343,15 @@ namespace CoachBot.Domain.Services
                 .ToList();
         }
 
+        public List<TournamentPhase> GetTournamentPhases(int tournamentId)
+        {
+            return _coachBotContext.TournamentPhases
+                .AsQueryable()
+                .Where(tp => tp.TournamentStage.TournamentId == tournamentId)
+                .OrderBy(tp => tp.Id)
+                .ToList();
+        }
+
         public TournamentPhase GetCurrentTournamentPhase(int tournamentId)
         {
             return _coachBotContext.TournamentGroupMatches
@@ -478,6 +487,18 @@ namespace CoachBot.Domain.Services
             var tournamentGroupTeam = _coachBotContext.TournamentGroupTeams.FirstOrDefault(t => t.TeamId == teamId && t.TournamentGroupId == tournamentGroupId);
             _coachBotContext.TournamentGroupTeams.Remove(tournamentGroupTeam);
             _coachBotContext.SaveChanges();
+        }
+
+        public List<Team> GetTournamentGroupTeams(int tournamentGroupId)
+        {
+            return _coachBotContext.TournamentGroups
+                .AsQueryable()
+                .Where(tg => tg.Id == tournamentGroupId)
+                .Include(tg => tg.TournamentGroupTeams)
+                .ThenInclude(tgt => tgt.Team)
+                .SelectMany(tg => tg.TournamentGroupTeams)
+                .Select(tgt => tgt.Team)
+                .ToList();
         }
 
         public void AddTournamentMatch(Match match, int tournamentGroupId, int tournamentPhaseId)

@@ -69,6 +69,7 @@ import { TournamentMatchListComponent } from './tournaments/tournament-match-lis
 import { TournamentMatchEditorComponent } from './match-editor/tournament-match-editor/tournament-match-editor.component';
 import { BanManagerModule } from './ban-manager/ban-manager.module';
 import { RatingsListModule } from './ratings/ratings.module';
+import { TournamentMatchCreatorComponent } from './tournaments/tournament-match-creator/tournament-match-creator.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { RatingsListModule } from './ratings/ratings.module';
     MatchEditorComponent,
     MatchDataUploaderComponent,
     TournamentMatchEditorComponent,
+    TournamentMatchCreatorComponent,
     MatchOverviewLineupComponent,
     MatchOverviewPlayerStatisticsComponent,
     MatchOverviewLineupPositionComponent,
