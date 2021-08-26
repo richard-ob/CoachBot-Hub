@@ -6,6 +6,7 @@ using Discord.Rest;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoachBot.Domain.Services
@@ -133,6 +134,41 @@ namespace CoachBot.Domain.Services
         public async Task SendModChannelMessage(string message, string title)
         {
             await SendChannelMessage(_config.DiscordConfig.ModChannelId, message, title);
+        }
+
+        public async Task SendBanChannelMessage(string message)
+        {
+            var lastMessage = await GetBanChannelMessage();
+            
+            if (lastMessage != null)
+            {
+                await SendAuditChannelMessage("Deleted ban list\n" + lastMessage.Embeds?.FirstOrDefault()?.Description);
+
+                var banChannel = await GetBanChannel();
+                await banChannel.DeleteMessageAsync(lastMessage);
+            }
+
+            await SendChannelMessage(_config.DiscordConfig.BanListChannelId, new EmbedBuilder().WithTitle("Bans").WithDescription(message).Build());
+        }
+
+        public async Task<string> GetBanChannelMessageText()
+        {
+            var message = await GetBanChannelMessage();
+
+            return message?.Embeds?.FirstOrDefault()?.Description;          
+        }
+
+        private async Task<IMessage> GetBanChannelMessage()
+        {
+            var banChannel = await GetBanChannel();
+            var messages =  await banChannel.GetMessagesAsync(1, CacheMode.AllowDownload).FlattenAsync();
+
+            return messages?.FirstOrDefault();
+        }
+
+        private async Task<ISocketMessageChannel> GetBanChannel()
+        {
+            return (_discordSocketClient.GetChannel(_config.DiscordConfig.BanListChannelId) as ISocketMessageChannel);
         }
     }
 }

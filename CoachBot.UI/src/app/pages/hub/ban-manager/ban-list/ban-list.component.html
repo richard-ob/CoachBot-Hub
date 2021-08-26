@@ -1,9 +1,12 @@
 <div class="py-4 container">
     <div *ngIf="!isLoading; else spinner" class="card card--has-table">
-        <div class="card__header">
+        <div class="card__header card__header--has-btn">
             <h4>
                 Bans
             </h4>
+            <a class="btn btn-xs btn-secondary float-right" [routerLink]="['/ban-message-manager']">
+                Edit Discord Ban Message
+            </a>
         </div>            
         <div class="card__content widget__content">
             <div class="table-responsive">

@@ -66,6 +66,38 @@ namespace CoachBot.Domain.Services
             {
                 try
                 {
+                    var banMessage = "";
+                    if (ban.EndDate != null)
+                    {
+                        if (ban.BanType == BanType.Community)
+                        {
+                            banMessage = $"You have been community banned from IOSoccer for {ban.BanDuration}. You may not play versus official mix teams during this time (e.g. overlap). If you wish to appeal, you can do so via https://www.iosoccer.com/support";
+                        }
+                        else
+                        {
+                            banMessage = $"You have been matchmaking banned from IOSoccer for {ban.BanDuration}. If you wish to appeal, you can do so via https://www.iosoccer.com/support";
+                        }
+                    }
+                    else
+                    {
+                        if (ban.BanType == BanType.Community)
+                        {
+                            banMessage = $"You have been community banned from IOSoccer permanently. You may not play versus official mix teams during this time (e.g. overlap) or in official competitions. We do our best to ensure that all bans are fair & appropriate, with the interest of the wider community & game in mind. If you wish to appeal, you can do so via https://www.iosoccer.com/support";
+                        }
+                        else
+                        {
+                            banMessage = $"You have been matchmaking banned from IOSoccer permanently. We do our best to ensure that all bans are fair & appropriate, with the interest of the wider community & game in mind. If you wish to appeal, you can do so via https://www.iosoccer.com/support";
+                        }
+                    }
+                    await _discordNotificationService.SendUserMessage((ulong)player.DiscordUserId, banMessage);
+                }
+                catch
+                {
+
+                }
+
+                try
+                {                    
                     var guild = await _discordRestClient.GetGuildAsync(ConfigHelper.GetConfig().DiscordConfig.OwnerGuildId);
                     await guild.AddBanAsync((ulong)player.DiscordUserId, 0, $"IOSoccer Hub Ban ID {banId}");
                 }
@@ -77,7 +109,6 @@ namespace CoachBot.Domain.Services
 
             _mySqlConnection.Close();
 
-            // TODO: Send ban DM
             var playerId = CallContext.GetData(CallContextDataType.PlayerId);
             var playerCreated = _dbContext.Players.Find(playerId);
             await _discordNotificationService.SendModChannelMessage($"{player.Name} banned by {playerCreated.Name} for {ban.BanDuration} - http://www.iosoccer.com/ban/{banId}", "Ban Created");

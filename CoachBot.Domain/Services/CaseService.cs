@@ -142,7 +142,10 @@ namespace CoachBot.Domain.Services
 
             if (player.HubRole == PlayerHubRole.Player)
             {
-                existingCase.CaseStatus = CaseStatus.PendingManagerResponse;
+                if (existingCase.CaseManagerId != null)
+                {
+                    existingCase.CaseStatus = CaseStatus.PendingManagerResponse;
+                }
                 _discordNotificationService.SendModChannelMessage($"`{existingCase.CaseTitle}` by {player.Name} - http://www.iosoccer.com/support/{caseId} {Environment.NewLine} ```{HtmlHelper.StripHTML(caseNoteText).Truncate(2000)}```", "Ticket Updated").Wait();
             }
             else

@@ -14,6 +14,7 @@ import { PlayerSelectorModule } from '../shared/components/player-selector/playe
 import { MatDatepickerModule, MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material';
 import { DlDateTimeDateModule, DlDateTimePickerModule } from 'angular-bootstrap-datetimepicker';
 import { BanEditorFormComponent } from './ban-editor-form/ban-editor-form.component';
+import { BanMessageManagerComponent } from './ban-message-manager/ban-message-manager.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { BanEditorFormComponent } from './ban-editor-form/ban-editor-form.compon
         BanListComponent,
         BanCreatorComponent,
         BanEditorComponent,
-        BanEditorFormComponent
+        BanEditorFormComponent,
+        BanMessageManagerComponent
     ],
     imports: [
         CommonModule,

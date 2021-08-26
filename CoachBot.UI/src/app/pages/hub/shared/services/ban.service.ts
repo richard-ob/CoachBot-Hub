@@ -30,4 +30,12 @@ export class BanService {
     deleteBan(ban: Ban) {
         return this.http.delete(`${environment.apiUrl}/api/ban/${ban.id}`, null).pipe();
     }
+
+    updateBanMessage(banMessage :{message: string}) {
+        return this.http.post(`${environment.apiUrl}/api/ban/update-ban-message`, banMessage).pipe();
+    }
+
+    getBanMessage(): Observable<{ message: string }> {
+        return this.http.get<{ message: string}>(`${environment.apiUrl}/api/ban/get-ban-message`).pipe();
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using CoachBot.Domain.Model;
 using CoachBot.Domain.Services;
+using CoachBot.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,10 +18,12 @@ namespace CoachBot.Controllers
     public class BanController : Controller
     {
         private readonly BanService _banService;
+        private readonly DiscordNotificationService _discordNotificationService;
 
-        public BanController(BanService banService)
+        public BanController(BanService banService, DiscordNotificationService discordNotificationService)
         {
             _banService = banService;
+            _discordNotificationService = discordNotificationService;
         }
 
         [HubRolePermission(HubRole = PlayerHubRole.Manager)]
@@ -62,6 +65,24 @@ namespace CoachBot.Controllers
             await _banService.DeleteBan(id);
 
             return Ok();
+        }
+
+        [HubRolePermission(HubRole = PlayerHubRole.Manager)]
+        [HttpPost("update-ban-message")]
+        public async Task<IActionResult> SendBanChannelMessage(BanChannelMessageDto banMessageDto)
+        {
+            await _discordNotificationService.SendBanChannelMessage(banMessageDto.Message);
+
+            return Ok();
+        }
+
+        [HubRolePermission(HubRole = PlayerHubRole.Manager)]
+        [HttpGet("get-ban-message")]
+        public async Task<BanChannelMessageDto> GetBanChannelMessage()
+        {
+            var message = await _discordNotificationService.GetBanChannelMessageText();
+
+            return new BanChannelMessageDto() { Message = message };
         }
 
     }
